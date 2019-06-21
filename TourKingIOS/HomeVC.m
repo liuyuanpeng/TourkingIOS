@@ -11,6 +11,7 @@
 #import <MJRefresh.h>
 #import "User.h"
 #import "AcceptedOrders.h"
+#import "NowOrders.h"
 
 @interface HomeVC ()<UITableViewDelegate, UITableViewDataSource>
 {
@@ -49,6 +50,12 @@
 }
 
 - (void) viewWillAppear:(BOOL)animated {
+    UIButton *rightBtn = (UIButton *)self.navigationItem.rightBarButtonItem.customView;
+    if ([NowOrders shareInstance].isListening) {
+        [rightBtn setTitle:@"关闭抢单" forState:UIControlStateNormal];
+    } else {
+        [rightBtn setTitle:@"开启抢单" forState:UIControlStateNormal];
+    }
     [[User shareInstance] getDriverInfo:^(BOOL ok) {
         if (ok){
             [self.tableView.mj_header beginRefreshing];

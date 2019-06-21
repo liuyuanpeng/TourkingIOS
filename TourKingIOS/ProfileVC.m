@@ -241,8 +241,7 @@
 }
 
 - (void) onLogout:(id)sender {
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    [userDefault removeObjectForKey:@"ISLOGIN"];
+    [[User shareInstance] logOut];
     [self.navigationController.tabBarController setSelectedIndex:0];
     [self presentViewController:[[LoginVC alloc] init] animated:NO completion:nil];
 }

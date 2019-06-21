@@ -21,8 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)startListen;
 - (void)stopListen;
+- (void)removeListen;
 @property (nonatomic, strong) NSArray *orders;
 @property (nonatomic, weak) id<NowOrdersDelegate> delegate;
+@property (nonatomic, assign) BOOL isListening;
 
 @end
 

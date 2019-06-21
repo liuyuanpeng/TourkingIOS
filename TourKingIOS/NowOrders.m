@@ -94,7 +94,8 @@
         dispatch_queue_t queue = dispatch_get_main_queue();
         _delegateTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
         uint64_t interval = (uint64_t)(3.0 * NSEC_PER_SEC);
-        dispatch_source_set_timer(_delegateTimer, dispatch_walltime(NULL, 0), interval, 0);
+        dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC));
+        dispatch_source_set_timer(_delegateTimer, start, interval, 0);
         // 设置回调
         dispatch_source_set_event_handler(_delegateTimer, ^{
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -104,6 +105,7 @@
             });
         });
     }
+    self.isListening = YES;
     dispatch_resume(_remoteTimer);
     dispatch_resume(_delegateTimer);
 }
@@ -115,12 +117,22 @@
     [userDefault synchronize];
     if(_remoteTimer)dispatch_suspend(_remoteTimer);
     if(_delegateTimer)dispatch_suspend(_delegateTimer);
+    self.isListening = NO;
+}
+
+- (void)removeListen {
+    if (_remoteTimer) dispatch_cancel(_remoteTimer);
+    _remoteTimer = nil;
+    if (_delegateTimer) dispatch_cancel(_delegateTimer);
+    _delegateTimer = nil;
+    self.isListening = NO;
 }
 
 - (void)dealloc {
-    dispatch_cancel(_remoteTimer);
+    self.isListening = NO;
+    if (_remoteTimer) dispatch_cancel(_remoteTimer);
     _remoteTimer = nil;
-    dispatch_cancel(_delegateTimer);
+    if (_delegateTimer) dispatch_cancel(_delegateTimer);
     _delegateTimer = nil;
 }
 @end

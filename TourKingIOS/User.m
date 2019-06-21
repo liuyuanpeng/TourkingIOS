@@ -9,6 +9,7 @@
 #import "User.h"
 #import "AFNRequestManager.h"
 #import "DBManager.h"
+#import "NowOrders.h"
 
 @interface User ()
 {
@@ -50,7 +51,8 @@
     [userDefault removeObjectForKey:@"ISLOGIN"];
     [userDefault removeObjectForKey:@"USER_ID"];
     [userDefault removeObjectForKey:@"TOKEN"];
-    [self stopSync];
+    [self removeSync];
+    [[NowOrders shareInstance] removeListen];
     self.id = nil;
 }
 
@@ -87,7 +89,7 @@
         dispatch_queue_t queue = dispatch_get_main_queue();
         _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
         uint64_t interval = (uint64_t)(3.0 * NSEC_PER_SEC);
-        dispatch_source_set_timer(_timer, DISPATCH_TIME_NOW, interval, 0);
+        dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), interval, 0);
         // 设置回调
         dispatch_source_set_event_handler(_timer, ^{
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -103,8 +105,13 @@
     if(_timer)dispatch_suspend(_timer);
 }
 
+- (void)removeSync {
+    if (_timer) dispatch_cancel(_timer);
+    _timer = nil;
+}
+
 - (void)dealloc {
-    dispatch_cancel(_timer);
+    if (_timer) dispatch_cancel(_timer);
     _timer = nil;
 }
 

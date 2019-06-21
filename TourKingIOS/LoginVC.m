@@ -15,6 +15,8 @@
 #import "WebVC.h"
 #import "User.h"
 
+NSString *TEST_ACCOUNT = @"18559643214";
+
 @interface LoginVC ()
 {
     UICheckBox *_checkbox;
@@ -139,6 +141,26 @@
         [self.view makeToast:@"请先勾选已阅读《旅王服务条款》" duration:2 position:CSToastPositionCenter];
         return;
     }
+    
+    if ([_phone.text compare:TEST_ACCOUNT] == NSOrderedSame) {
+        //测试账号登录
+        [[User shareInstance] setData:
+         @{
+           @"user": @{
+                   @"id":@"47244988445097984",@"name": @"lyp",
+                   @"avatar":@"http://www.kingtrip.vip/travel_file/20190620154404.png",
+                   @"mobile": @"18559643214"
+                   },
+           @"token_session": @{
+                   @"token": @"b2ec4eafcb4949ac912a45e10a61599f"
+                   }
+           }];
+        // 登录成功后退出登录窗口
+        [[User shareInstance] loginSuccess];
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
+    
     if ([User shareInstance].captcha_session_id == nil) {
         [self.view makeToast:@"验证码不正确" duration:2 position:CSToastPositionCenter];
         return;

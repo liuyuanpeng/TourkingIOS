@@ -15,6 +15,7 @@
 - (void)getDriverInfo:(void(^)(BOOL ok))loadingOK;
 - (void)startSync;
 - (void)stopSync;
+- (void)removeSync;
 - (void)updateAvatar: (NSString *)path;
 - (void)logOut;
 - (void)loginSuccess;
