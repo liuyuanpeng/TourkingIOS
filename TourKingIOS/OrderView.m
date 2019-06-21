@@ -9,6 +9,11 @@
 #import "OrderView.h"
 #import "UIButton+countDown.h"
 #import <SRMModalViewController.h>
+#import <DateTools/DateTools.h>
+#import "NowOrders.h"
+#import "HomeVC.h"
+#import "AFNRequestManager.h"
+#import "User.h"
 
 @interface OrderView ()
 {
@@ -18,10 +23,27 @@
     UILabel *_startTime;
     UILabel *_kilo;
     UIButton *_acceptBtn;
+    NSDictionary *_data;
 }
+@property (nonatomic, weak) HomeVC *homeVC;
 @end
 
 @implementation OrderView
+
+- (instancetype)initWithData:(nonnull NSDictionary *)order homeVC:(nonnull HomeVC *)vc {
+    self = [self init];
+    if (self) {
+        _homeVC = vc;
+        _data = [NSDictionary dictionaryWithDictionary:order];
+        _orderId.text = [order objectForKey:@"id"];
+        _startPlace.text = [order objectForKey:@"start_place"];
+        _endPlace.text = [order objectForKey:@"target_place"];
+        _startTime.text = [[NSDate dateWithTimeIntervalSince1970:[[order objectForKey:@"start_time"] doubleValue]/1000] formattedDateWithFormat:@"时间: yyyy-MM-dd HH:mm"];
+        NSNumber *kilo = [order objectForKey:@"kilo"];
+        _kilo.text = [NSString stringWithFormat:@"距离您%.2fkm", [kilo isEqual:[NSNull null]] ? 0.0 : [kilo doubleValue]/1000];
+    }
+    return self;
+}
 
 - (instancetype) init {
     self = [super init];
@@ -51,7 +73,7 @@
         _orderId = [[UILabel alloc] initWithFrame:CGRectMake(30, 60, self.frame.size.width - 45, 15)];
         [_orderId setFont:[UIFont systemFontOfSize:15]];
         _orderId.text = @"djfasdlj的案件发垃圾发开发家具就阿拉斯加发加";
-        [self addSubview:_startPlace];
+        [self addSubview:_orderId];
         
         UIImageView *startPlaceImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 93, 7, 7)];
         [startPlaceImg setImage:[UIImage imageNamed:@"Oval 1"]];
@@ -109,12 +131,30 @@
 }
 
 - (void)onClose {
-    NSLog(@"onClose");
+    if (_data != nil) {
+        [[NowOrders shareInstance] insertTrashOrder:[_data objectForKey:@"id"]];
+    }
     [[SRMModalViewController sharedInstance] hide];
+    
 }
 
 - (void)onAccept:(id)sender {
+    if (_data != nil) {
+        [[NowOrders shareInstance] insertTrashOrder:[_data objectForKey:@"id"]];
+    }
+    
+    [AFNRequestManager requestAFURL:@"/travel/driver/accept_order" httpMethod:METHOD_POST params:@{@"order_id":[_data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
+        if (ret == nil) {
+            return;
+        }
+        // 更新任务列表
+        if (self.homeVC) {
+            [self.homeVC refreshData];
+        }
+    } failure:nil];
+    [[SRMModalViewController sharedInstance] hide];
 }
+
 
 /*
 // Only override drawRect: if you perform custom drawing.

@@ -7,6 +7,15 @@
 //
 
 #import "MissionView.h"
+#import "AMapVC.h"
+#import <DateTools/DateTools.h>
+#import "AFNRequestManager.h"
+#import "User.h"
+#import "HomeVC.h"
+#import "MissionVC.h"
+#import "Utils.h"
+#import "AlertView.h"
+#import <SRMModalViewController.h>
 
 @interface MissionView ()
 {
@@ -19,10 +28,41 @@
     UILabel *_price;
     UIButton *_right;
     UIButton *_rightEx;
+    UIButton *_mapBtn;
 }
+@property (nonatomic, strong) NSDictionary *data;
+@property (nonatomic, strong) HomeVC *homeVC;
+@property (nonatomic, strong) MissionVC *missionVC;
 @end
 
 @implementation MissionView
+
+- (void)setData:(NSDictionary *)data {
+    _data = [NSDictionary dictionaryWithDictionary:data];
+    NSString *status = [data objectForKey:@"order_status"];
+    if ([status compare:@"ACCEPTED"] == NSOrderedSame) {
+        _missionTitle.text = @"未开始任务";
+        [self setRightBtnTitle:@"申请改派"];
+    } else if ([status compare:@"ON_THE_WAY"] == NSOrderedSame) {
+        _missionTitle.text = @"进行中任务";
+        _missionTitle.textColor = [UIColor colorWithRed:0x2b/255.0 green:0xb3/255.0 blue:0x6c/255.0 alpha:1.0];
+        [self setRightBtnTitle:@"确认送达"];
+    } else {
+        _missionTitle.text = @"未指派任务";
+        [_mapBtn setHidden:YES];
+        [self setRightBtnTitle:@"我要接单"];
+    }
+    
+    NSDate *startTime = [[NSDate alloc] initWithTimeIntervalSince1970:[[data objectForKey:@"start_time"] doubleValue]/1000];
+    _missionTime.text = [startTime formattedDateWithFormat:@"yyyy-MM-dd HH:mm"];
+    _startTime.text = [startTime formattedDateWithFormat:@"上车时间: MM月dd日 HH:mm"];
+    
+    _startPlace.text = [data objectForKey:@"start_place"];
+    _endPlace.text = [data objectForKey:@"target_place"];
+    _airNO.text = [NSString stringWithFormat:@"航班号: %@", [data objectForKey:@"air_no"]];
+    _price.text = [NSString stringWithFormat:@"一口价: %.2f", [[data objectForKey:@"price"] doubleValue]];
+    
+}
 
 - (instancetype) init {
     self = [super init];
@@ -105,10 +145,10 @@
         [lineSep3 setBackgroundColor:[UIColor colorWithWhite:244/255.0 alpha:1.0]];
         [self addSubview:lineSep3];
         
-        UIButton *mapBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 85, 120, 70, 70)];
-        [mapBtn setBackgroundImage:[UIImage imageNamed:@"Group 6"] forState:UIControlStateNormal];
-        [mapBtn addTarget:self action:@selector(onMap:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:mapBtn];
+        _mapBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 85, 120, 70, 70)];
+        [_mapBtn setBackgroundImage:[UIImage imageNamed:@"Group 6"] forState:UIControlStateNormal];
+        [_mapBtn addTarget:self action:@selector(onMap:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_mapBtn];
         
         UIButton *phone = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width/4 - 50, 215, 20, 20)];
         [phone setBackgroundImage:[UIImage imageNamed:@"联系客户"] forState:UIControlStateNormal];
@@ -124,14 +164,14 @@
         [self addSubview:phoneEx];
         
         _right = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width*0.75 - 50, 215, 20, 20)];
-        [_right setBackgroundImage:[UIImage imageNamed:@"改派"] forState:UIControlStateNormal];
+        [_right setBackgroundImage:[UIImage imageNamed:@"接单"] forState:UIControlStateNormal];
         [_right addTarget:self action:@selector(onRight:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_right];
         
         _rightEx = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         _rightEx.frame = CGRectMake(self.frame.size.width*0.75 - 20, 215, 80, 20);
         [_rightEx addTarget:self action:@selector(onRight:) forControlEvents:UIControlEventTouchUpInside];
-        [_rightEx setTitle:@"申请改派" forState:UIControlStateNormal];
+        [_rightEx setTitle:@"我要接单" forState:UIControlStateNormal];
         [_rightEx.titleLabel setFont:[UIFont systemFontOfSize:18]];
         [_rightEx setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [self addSubview:_rightEx];
@@ -140,19 +180,61 @@
     return self;
 }
 
-- (void) onMap: (id)sender {}
+- (void) onMap: (id)sender {
+    if ([Utils locationAccess] == NO) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"要使用导航需要打开定位权限!" preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+            [alertController dismissViewControllerAnimated:NO completion:nil];
+            
+        }]];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:@"前往设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{UIApplicationOpenURLOptionUniversalLinksOnly : @(NO)} completionHandler:nil];
+            [alertController dismissViewControllerAnimated:NO completion:nil];
+        }]];
+        [self.viewcontroller presentViewController:alertController animated:YES completion:nil];
+        return;
+    }
+    AMapVC *aMapVC = [[AMapVC alloc] init];
+    aMapVC.data = [NSMutableDictionary dictionaryWithDictionary:self.data];
+    [self.viewcontroller presentViewController:aMapVC animated:YES completion:nil];
+}
 
 - (void)onPhone: (id)sender {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", @"18559643214"]] options:@{UIApplicationOpenURLOptionUniversalLinksOnly:@(NO)} completionHandler:nil];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", [_data objectForKey:@"mobile"]]] options:@{UIApplicationOpenURLOptionUniversalLinksOnly:@(NO)} completionHandler:nil];
 }
 
 - (void)onRight: (id)sender {
     UIButton *target = sender;
     if ([target.titleLabel.text compare:@"我要接单"] == NSOrderedSame) {
         // 接单
-        
+        [AFNRequestManager requestAFURL:@"/travel/driver/accept_order" httpMethod:METHOD_POST params:@{@"order_id":[_data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
+            if (ret == nil) {
+                return;
+            }
+            // 更新任务列表
+            MissionVC *missionVC = (MissionVC *)self.viewcontroller;
+            [missionVC refreshData];
+        } failure:nil];
     } else if ([target.titleLabel.text compare:@"确认送达"] == NSOrderedSame) {
         // 确认送达
+        AlertView *alertView = [AlertView initWithCancelBlock:^{
+            NSLog(@"cancel");
+        } okBlock:^{
+            [AFNRequestManager requestAFURL:@"/travel/driver/done_order" httpMethod:METHOD_POST params:@{@"order_id":[self.data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
+                if (ret == nil) {
+                    return;
+                }
+                // 更新已接单列表
+                HomeVC *homeVC = (HomeVC *)self.viewcontroller;
+                [homeVC refreshData];
+                
+            } failure:nil];
+
+        }];
+        [SRMModalViewController sharedInstance].enableTapOutsideToDismiss = NO;
+        [[SRMModalViewController sharedInstance] showView:alertView];
     } else {
         //申请改派
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"确定要申请改派该订单吗？" preferredStyle:UIAlertControllerStyleAlert];
@@ -165,6 +247,17 @@
         [alertController addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
             [alertController dismissViewControllerAnimated:NO completion:nil];
+            // 改派订单
+            [AFNRequestManager requestAFURL:@"/travel/driver/change_order" httpMethod:METHOD_POST params:@{@"order_id":[self.data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
+                if (ret == nil) {
+                    return;
+                }
+                // 更新已接单列表
+                HomeVC *homeVC = (HomeVC *)self.viewcontroller;
+                [homeVC refreshData];
+                
+            } failure:nil];
+
             
         }]];
         [self.viewcontroller presentViewController:alertController animated:YES completion:nil];
@@ -178,8 +271,8 @@
     if ([title compare:@"确认送达"] == NSOrderedSame) {
         [_right setBackgroundImage:[UIImage imageNamed:@"确认送达"] forState:UIControlStateNormal];
     }
-    if ([title compare:@"我要接单"] == NSOrderedSame) {
-        [_right setBackgroundImage:[UIImage imageNamed:@"接单"] forState:UIControlStateNormal];
+    if ([title compare:@"申请改派"] == NSOrderedSame) {
+        [_right setBackgroundImage:[UIImage imageNamed:@"改派"] forState:UIControlStateNormal];
     }
 }
 

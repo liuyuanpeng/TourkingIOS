@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MissionTableViewCell : UITableViewCell
 
 + (instancetype)cellWithTableView:(UITableView *)tableView viewController:(UIViewController *)viewControlelr;
+- (void)setData:(NSDictionary *)data;
 @end
+
 
 NS_ASSUME_NONNULL_END

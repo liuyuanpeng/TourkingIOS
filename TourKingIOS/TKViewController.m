@@ -12,9 +12,13 @@
 #import "ProfileVC.h"
 #import <SRMModalViewController.h>
 #import "OrderView.h"
+#import "NowOrders.h"
 
-@interface TKViewController ()
-
+@interface TKViewController ()<SRMModalViewControllerDelegate, NowOrdersDelegate>
+{
+    BOOL _bModalShow;
+    HomeVC *_homeVC;
+}
 @end
 
 @implementation TKViewController
@@ -22,7 +26,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    HomeVC *homeVC = [[HomeVC alloc] init];
+    _homeVC = [[HomeVC alloc] init];
     MissionVC *missionVC = [[MissionVC alloc] init];
     ProfileVC *profileVC = [[ProfileVC alloc] init];
     
@@ -31,7 +35,8 @@
 
     NSDictionary *titleTextAttribute = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
 
-    UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:homeVC];    homeNav.tabBarItem.title = @"首页";
+    UINavigationController *homeNav = [[UINavigationController alloc] initWithRootViewController:_homeVC];
+    homeNav.tabBarItem.title = @"首页";
     [homeNav.tabBarItem setImage:[[UIImage imageNamed:@"首页"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     [homeNav.tabBarItem setSelectedImage:[[UIImage imageNamed:@"首页_click"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     [homeNav.tabBarItem setTitleTextAttributes:textSelectedAttribute forState:UIControlStateSelected];
@@ -48,7 +53,7 @@
     [listenButton setBackgroundColor:[UIColor whiteColor]];
     [listenButton setTitleColor:[UIColor colorWithRed:0x2B/255.0 green:0xB3/255.0 blue:0x6B/255.0 alpha:1.0] forState:UIControlStateNormal];
     listenButton.layer.cornerRadius = 10.0;
-    homeVC.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:listenButton];
+    _homeVC.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:listenButton];
     
     
     UINavigationController *missionNav = [[UINavigationController alloc] initWithRootViewController:missionVC];
@@ -71,22 +76,42 @@
     [profileNav.navigationBar setShadowImage:[[UIImage alloc] init]];
     [profileNav.navigationBar setTitleTextAttributes:titleTextAttribute];
     self.viewControllers = @[homeNav, missionNav, profileNav];
+    [SRMModalViewController sharedInstance].delegate = self;
+    [NowOrders shareInstance].delegate = self;
 }
 
 // 关闭/开启抢单
 - (void)onToggleListen:(UIButton*)sender {
-    NSLog(@"关闭/开启抢单");
-    [SRMModalViewController sharedInstance].enableTapOutsideToDismiss = NO;
-    [[SRMModalViewController sharedInstance] showView:[[OrderView alloc]init]];
+    if ([sender.titleLabel.text compare:@"开启抢单"] == NSOrderedSame) {
+        [sender setTitle:@"关闭抢单" forState:UIControlStateNormal];
+        [[NowOrders shareInstance] startListen];
+    } else {
+        [sender setTitle:@"开启抢单" forState:UIControlStateNormal];
+        [[NowOrders shareInstance] stopListen];
+    }
 }
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+
+#pragma mark - SRMModalViewControllerDelegate
+- (void)modalViewWillShow:(SRMModalViewController *)modalViewController {
+    _bModalShow = YES;
+}
+- (void)modalViewDidShow:(SRMModalViewController *)modalViewController {
+    _bModalShow = YES;
+}
+- (void)modalViewWillHide:(SRMModalViewController *)modalViewController {
+    _bModalShow = NO;
+}
+- (void)modalViewDidHide:(SRMModalViewController *)modalViewController {
+    _bModalShow = NO;
+}
+
+#pragma mark - NowOrdersDelegate
+- (void)showModalWithOrder:(NSDictionary *)order {
+    if (_bModalShow || order == nil) {
+        return;
+    }
+    OrderView *orderView = [[OrderView alloc] initWithData:order homeVC:_homeVC];
+    [[SRMModalViewController sharedInstance] showView:orderView];
+}
 
 @end

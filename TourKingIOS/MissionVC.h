@@ -11,7 +11,7 @@
 @interface MissionVC : UIViewController
 
 @property (nonatomic, strong) UITableView *tableView;
-
+- (void)refreshData;
 @end
 
 

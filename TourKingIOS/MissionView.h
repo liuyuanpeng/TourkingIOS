@@ -11,10 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MissionView : UIView
-
-- (void) setRightBtnTitle:(NSString *)title;
 @property (nonatomic,strong) UIViewController * viewcontroller;
-
+- (void) setData:(NSDictionary *)data;
 @end
 
 NS_ASSUME_NONNULL_END

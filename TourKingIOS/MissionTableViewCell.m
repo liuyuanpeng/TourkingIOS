@@ -9,6 +9,12 @@
 #import "MissionTableViewCell.h"
 #import "MissionView.h"
 
+@interface MissionTableViewCell ()
+{
+    MissionView *_missionView;
+}
+@end
+
 @implementation MissionTableViewCell
 
 
@@ -28,11 +34,15 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.backgroundColor = [UIColor clearColor];
         
-        MissionView *missionView = [[MissionView alloc] init];
-        missionView.viewcontroller = viewController;
-        [self.contentView addSubview:missionView];
+        _missionView = [[MissionView alloc] init];
+        _missionView.viewcontroller = viewController;
+        [self.contentView addSubview:_missionView];
     }
     return self;
+}
+
+- (void)setData:(NSDictionary *)data {
+    [_missionView setData: data];
 }
 
 - (void)awakeFromNib {

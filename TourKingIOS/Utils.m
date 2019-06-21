@@ -7,6 +7,11 @@
 //
 
 #import "Utils.h"
+#import <DateTools/DateTools.h>
+#import <Photos/PHPhotoLibrary.h>
+#import <AVFoundation/AVCaptureDevice.h>
+#import <AVFoundation/AVMediaFormat.h>
+#import <CoreLocation/CoreLocation.h>
 
 @implementation Utils
 
@@ -62,6 +67,86 @@
     }else{
         return NO;
     }
+}
+
++ (NSTimeInterval)getDeleteTimeInterval {
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *comps = nil;
+    comps = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour fromDate:[NSDate date]];
+    [comps setHour:3];
+    return [calendar dateFromComponents:comps].timeIntervalSince1970;
+}
+
++ (NSDictionary *) getDayPeriod:(NSDate *)date {
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *comps = nil;
+    comps = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:date];
+    NSTimeInterval startInterval = [calendar dateFromComponents:comps].timeIntervalSince1970;
+    NSTimeInterval endInterval = startInterval + 24*60*60;
+    return @{@"start": @(startInterval*1000), @"end":@(endInterval*1000 - 1)};
+}
+
++ (NSTimeInterval) getMonthBeginOfDate:(NSDate *)date {
+    
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    
+    NSDateComponents *comps = nil;
+    
+    comps = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth fromDate:date];
+    
+    return [calendar dateFromComponents:comps].timeIntervalSince1970;
+}
+
++ (NSTimeInterval) getMonthEndOfDate:(NSDate *)date {
+    
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    
+    NSDateComponents *comps = nil;
+    
+    comps = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth fromDate:date];
+    
+    return [[calendar dateFromComponents:comps] dateByAddingMonths:1].timeIntervalSince1970 - 1;
+}
+
+- (NSDictionary*)getCuttentDayPeriod {
+    NSDate*date = [NSDate date];
+    NSCalendar*calendar = [NSCalendar currentCalendar];
+    NSDateComponents*comps = [calendar components:NSCalendarUnitEra|NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour fromDate: date];
+    [comps setHour:0];//设置开始时间为0点
+    NSDate*beginDate =[calendar dateFromComponents:comps];
+    NSDate*endDate = [beginDate dateByAddingTimeInterval:3600*24-1];
+    NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
+    formatter.dateFormat=@"yyyy-MM-dd HH:mm:ss";
+    NSString* startTime = [formatter stringFromDate:beginDate];
+    NSString* endTime = [formatter stringFromDate:endDate];
+    NSDictionary*dct = [[NSDictionary alloc] initWithObjects:@[startTime, endTime]forKeys:@[@"StartTime",@"EndTime"]];
+    return dct;
+}
+
++ (BOOL)photoAccess {
+    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+    if (status == PHAuthorizationStatusRestricted || status == PHAuthorizationStatusDenied)
+    {
+        return NO;
+    }
+    return YES;
+}
+
++ (BOOL)cameraAccess {
+    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (status == AVAuthorizationStatusRestricted || status == AVAuthorizationStatusDenied)
+    {
+        return NO;
+    }
+    return YES;
+}
+
+
++ (BOOL)locationAccess {
+    if ([CLLocationManager locationServicesEnabled] && ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways)) {
+        return YES;
+    }
+    return NO;
 }
 
 @end

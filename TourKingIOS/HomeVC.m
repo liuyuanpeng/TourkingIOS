@@ -8,7 +8,9 @@
 
 #import "HomeVC.h"
 #import "MissionTableViewCell.h"
-#import <ODRefreshControl.h>
+#import <MJRefresh.h>
+#import "User.h"
+#import "AcceptedOrders.h"
 
 @interface HomeVC ()<UITableViewDelegate, UITableViewDataSource>
 {
@@ -16,8 +18,8 @@
     UITextField *_captcha;
     UIButton *_sendCaptcha;
     UIButton *_login;
-    ODRefreshControl *_refreshControl;
 }
+
 @end
 
 @implementation HomeVC
@@ -43,32 +45,43 @@
 //    self.tableView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.tableView];
     
-     _refreshControl = [[ODRefreshControl alloc] initInScrollView:self.tableView];
-    [_refreshControl addTarget:self action:@selector(dropViewDidBeginRefreshing:) forControlEvents:UIControlEventValueChanged];
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(refreshData)];
 }
 
-- (void) dropViewDidBeginRefreshing: (id)sender {
-    [_refreshControl endRefreshing];
+- (void) viewWillAppear:(BOOL)animated {
+    [[User shareInstance] getDriverInfo:^(BOOL ok) {
+        if (ok){
+            [self.tableView.mj_header beginRefreshing];
+        }
+    }];
 }
+
+- (void)refreshData {
+    [[AcceptedOrders shareInstance] getList:^(BOOL ok) {
+        [self.tableView.mj_header endRefreshing];
+        if (ok) {
+            [self.tableView reloadData];
+        }
+    }];
+}
+
 
 #pragma mark - UITableView Delegate Implementation
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 250.0;
 }
 
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
 #pragma mark - UITableView Datasource Impletation
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 20;
+    return [AcceptedOrders shareInstance].orders == nil ? 0 : [AcceptedOrders shareInstance].orders.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     MissionTableViewCell *cell = [MissionTableViewCell cellWithTableView:tableView viewController:self];
+    NSInteger rowIndex = indexPath.row;
+    NSDictionary *rowData = [AcceptedOrders shareInstance].orders[rowIndex];
+    [cell setData:rowData];
     return cell;
 }
 

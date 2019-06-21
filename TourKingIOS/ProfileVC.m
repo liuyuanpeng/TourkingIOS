@@ -9,16 +9,64 @@
 #import "ProfileVC.h"
 #import "WebVC.h"
 #import "LoginVC.h"
+#import "HistoryVC.h"
+#import "IncomeVC.h"
+#import "Income.h"
+#import "User.h"
+#import "AFNRequestManager.h"
+#import "Utils.h"
 
-@interface ProfileVC ()
+@interface ProfileVC () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
-    UIImageView *_avatar;
-    UILabel *_username;
     UIView *_starsView;
 }
+@property (nonatomic, strong) UIImageView *avatar;
+@property (nonatomic, strong) UILabel *username;
+@property (nonatomic, strong) UILabel *incomeTip;
+@property (nonatomic, strong) UIImage *pickerImg;
 @end
 
 @implementation ProfileVC
+- (void)viewWillAppear:(BOOL)animated {
+    if ([User shareInstance].id ) {
+        if ([User shareInstance].avatar == nil || [[User shareInstance].avatar compare:@""] == NSOrderedSame) {
+            self.avatar.image = [UIImage imageNamed:@"司机头像"];
+        } else {
+            self.avatar.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[User shareInstance].avatar]]];
+        }
+        if (self.pickerImg) {
+            self.avatar.image = self.pickerImg;
+        }
+        self.username.text = [User shareInstance].name;
+        [self setStars:round([User shareInstance].evaluate)];
+    } else {
+        [[User shareInstance] getDriverInfo:^(BOOL ok) {
+            if ([User shareInstance].avatar == nil || [[User shareInstance].avatar compare:@""] == NSOrderedSame) {
+                self.avatar.image = [UIImage imageNamed:@"司机头像"];
+            } else {
+                self.avatar.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[User shareInstance].avatar]]];
+            }
+            if (self.pickerImg) {
+                self.avatar.image = self.pickerImg;
+            }
+            self.username.text = [User shareInstance].name;
+            [self setStars:round([User shareInstance].evaluate)];
+        }];
+
+    }
+    if ([Income shareInstance].todayTotal) {
+        self.incomeTip.text = [NSString stringWithFormat:@"今日收入%.2f元", [Income shareInstance].todayTotal];
+    } else {
+        [[Income shareInstance] getListToday:^(BOOL ok) {
+            self.incomeTip.text = [NSString stringWithFormat:@"今日收入%.2f元", [Income shareInstance].todayTotal];
+        }];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    self.pickerImg = nil;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -33,17 +81,20 @@
     
     CGRect rcTop = self.navigationController.navigationBar.frame;
     
-    UIView *avatarView = [[UIView alloc] initWithFrame:CGRectMake(0, rcTop.origin.y + rcTop.size.height, rScreen.size.width, 140)];
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, rcTop.origin.y + rcTop.size.height, rScreen.size.width, rScreen.size.height - rcTop.origin.y - rcTop.size.height)];
+    [self.view addSubview:scrollView];
+    
+    UIView *avatarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, rScreen.size.width, 140)];
     [avatarView setBackgroundColor:[UIColor whiteColor]];
     avatarView.userInteractionEnabled=YES;
     UITapGestureRecognizer *labelTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(changeAvatar:)];
     [avatarView addGestureRecognizer:labelTapGestureRecognizer];
-    [self.view addSubview:avatarView];
+    [scrollView addSubview:avatarView];
     
     _avatar = [[UIImageView alloc] initWithFrame:CGRectMake(20, 20, 100, 100)];
     _avatar.layer.cornerRadius = 50.0;
     _avatar.clipsToBounds = YES;
-    [_avatar setImage:[UIImage imageNamed:@"Rectangle"]];
+    [_avatar setImage:[UIImage imageNamed:@"司机头像"]];
     [avatarView addSubview:_avatar];
     
     UIImageView *rightImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Shape"]];
@@ -52,16 +103,13 @@
     
     _username = [[UILabel alloc] initWithFrame:CGRectMake(_avatar.frame.origin.x + _avatar.frame.size.width + 20, 40, rScreen.size.width - 170, 20)];
     [_username setFont:[UIFont systemFontOfSize:20]];
-    _username.text = @"刘远鹏";
     [avatarView addSubview:_username];
     
     _starsView = [[UIView alloc] initWithFrame:CGRectMake(_avatar.frame.origin.x + _avatar.frame.size.width + 20, 80, rScreen.size.width - 170, 20)];    [avatarView addSubview:_starsView];
     
-    [self setStars:3];
-    
     UIView *formView = [[UIView alloc] initWithFrame:CGRectMake(0, avatarView.frame.origin.y + avatarView.frame.size.height + 10, rScreen.size.width, 48*3+2)];
     formView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:formView];
+    [scrollView addSubview:formView];
     
     UIView *incomView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, rScreen.size.width, 80)];
     incomView.userInteractionEnabled=YES;
@@ -78,11 +126,10 @@
     UILabel *incomeLabel = [[UILabel alloc]initWithFrame:CGRectMake(54, 14, 100, 20)];
     incomeLabel.text = @"我的收入";
     [incomView addSubview:incomeLabel];
-    UILabel *incomeTip = [[UILabel alloc] initWithFrame:CGRectMake(rScreen.size.width - 237, 14, 200, 20)];
-    incomeTip.text = @"今日收入23123.2元";
-    [incomeTip setTextAlignment:NSTextAlignmentRight];
-    [incomeTip setTextColor:[UIColor colorWithRed:235/255.0 green:88/255.0 blue:88/255.0 alpha:1.0]];
-    [incomView addSubview:incomeTip];
+    _incomeTip = [[UILabel alloc] initWithFrame:CGRectMake(rScreen.size.width - 237, 14, 200, 20)];
+    [_incomeTip setTextAlignment:NSTextAlignmentRight];
+    [_incomeTip setTextColor:[UIColor colorWithRed:235/255.0 green:88/255.0 blue:88/255.0 alpha:1.0]];
+    [incomView addSubview:_incomeTip];
     
     
     UIView *lineSep1 = [[UIView alloc] initWithFrame:CGRectMake(20, 48, rScreen.size.width - 40, 1)];
@@ -134,20 +181,63 @@
     [logout setBackgroundColor:[UIColor whiteColor]];
     [logout setTitleColor:[UIColor colorWithRed:92/255.0 green:196/255.0 blue:142/255.0 alpha:1.0] forState:UIControlStateNormal];
     [logout addTarget:self action:@selector(onLogout:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:logout];
+    [scrollView addSubview:logout];
+    scrollView.contentSize = CGSizeMake(rScreen.size.width, logout.frame.origin.y + logout.frame.size.height+20);
     
 }
 
 - (void)changeAvatar:(UITapGestureRecognizer *)recognizer {
+    if ([Utils photoAccess] == NO) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"要使用相册需要打开权限!" preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+            [alertController dismissViewControllerAnimated:NO completion:nil];
+            
+        }]];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:@"前往设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{UIApplicationOpenURLOptionUniversalLinksOnly : @(NO)} completionHandler:nil];
+            [alertController dismissViewControllerAnimated:NO completion:nil];
+        }]];
+        [self presentViewController:alertController animated:YES completion:nil];
+        return;
+    }
     
+    if ([Utils cameraAccess] == NO) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"要使用相机需要打开权限!" preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+            [alertController dismissViewControllerAnimated:NO completion:nil];
+            
+        }]];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:@"前往设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{UIApplicationOpenURLOptionUniversalLinksOnly : @(NO)} completionHandler:nil];
+            [alertController dismissViewControllerAnimated:NO completion:nil];
+        }]];
+        [self presentViewController:alertController animated:YES completion:nil];
+        return;
+    }
+    
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.delegate = self;
+    imagePicker.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    imagePicker.allowsEditing = YES;
+    // 模拟器上不支持UIImagePickerControllerSourceTypeCamera
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        [imagePicker setSourceType:UIImagePickerControllerSourceTypeCamera];
+    } else {
+        [imagePicker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+    }
+    [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
 - (void)showIncome:(UITapGestureRecognizer *)recognizer {
-    
+    [self presentViewController:[[IncomeVC alloc] init] animated:NO completion:nil];
 }
 
 - (void)showHistory:(UITapGestureRecognizer *)recognizer {
-    
+    [self presentViewController:[[HistoryVC alloc] init] animated:NO completion:nil];
 }
 
 - (void) onLogout:(id)sender {
@@ -188,6 +278,20 @@
         grayStar.frame = CGRectMake(i*20, 0, 15, 14);
         [_starsView addSubview:grayStar];
     }
+}
+
+#pragma mark - UIImagePickerControllerDelegate Implementation
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    self.pickerImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+    self.avatar.image = self.pickerImg;
+    [AFNRequestManager requestAFURL:@"/file/local/upload" params:nil data:@{@"file_type":@"IMAGE", @"file_meta_data":@"{}"} imageData:UIImageJPEGRepresentation(self.pickerImg, 0.2) succeed:^(NSDictionary *ret){
+        if (ret == nil) {
+            return;
+        }
+        [[User shareInstance] updateAvatar:[[ret objectForKey:@"data"] objectForKey:@"path"]];
+    } failure: nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

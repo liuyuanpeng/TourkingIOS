@@ -13,6 +13,7 @@
 #import <Toast/UIView+Toast.h>
 #import "UIButton+countDown.h"
 #import "WebVC.h"
+#import "User.h"
 
 @interface LoginVC ()
 {
@@ -103,6 +104,7 @@
     if ([userDefault objectForKey:@"ISLOGIN"] != nil) {
         [_phone setText:[userDefault objectForKey:@"USER"]];
     }
+    [_phone setText:@"18559643214"];
 }
 
 -(UIView*)createView:(Class)cls
@@ -114,8 +116,22 @@
 
 
 - (void)getCAPTCHA: (id) sender{
-    NSLog(@"getCAPTCHAR");
+    if (![Utils validatePhoneNumber:_phone.text]) {
+        [self.view makeToast:@"请输入正确的手机号" duration:2 position:CSToastPositionCenter];
+        return;
+    }
     [_sendCaptcha startWithTime:60 title:@"发送验证码" countDownTitle:@"秒后重新发送" mainColor:[UIColor colorWithRed:43.0/255.0 green:179.0/255.0 blue:108.0/255.0 alpha:1.0] countColor: [UIColor lightGrayColor]];
+    
+    // 发送验证码
+    [AFNRequestManager requestAFURL:@"/session/captcha" httpMethod:METHOD_POST params:nil
+                               data:@{
+                                      @"captcha_type":@"MOBILE",
+                                      @"username":_phone.text
+                                      }
+                            succeed:^(NSDictionary * _Nonnull ret) {
+                                if (ret == nil) return;
+                                [User shareInstance].captcha_session_id = [NSString stringWithString:[[ret objectForKey:@"data"] objectForKey:@"captcha_session_id"]];
+                            } failure:nil];
 }
 
 - (void)onLogin: (id)sender {
@@ -123,15 +139,20 @@
         [self.view makeToast:@"请先勾选已阅读《旅王服务条款》" duration:2 position:CSToastPositionCenter];
         return;
     }
+    if ([User shareInstance].captcha_session_id == nil) {
+        [self.view makeToast:@"验证码不正确" duration:2 position:CSToastPositionCenter];
+        return;
+    }
     
-    // 登录成功后保存手机号
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    [userDefault setObject:_phone.text forKey:@"USER"];
-    [userDefault setObject:@"ISLOGIN" forKey:@"ISLOGIN"];
-    [userDefault synchronize];
-
-    // 登录成功后退出登录窗口
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [AFNRequestManager requestAFURL:@"/user/captcha_login" httpMethod:METHOD_POST params:nil data:@{@"captcha":_captcha.text, @"captcha_session_id":[User shareInstance].captcha_session_id, @"username":_phone.text} succeed:^(NSDictionary *ret) {
+        if (ret == nil) return;
+        [[User shareInstance] setData:[ret objectForKey:@"data"]];
+        // 登录成功后退出登录窗口
+        [[User shareInstance] loginSuccess];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } failure:nil];
+    
+    
 }
 
 - (void)onViewClause: (id) sender {

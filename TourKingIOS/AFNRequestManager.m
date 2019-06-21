@@ -10,6 +10,28 @@
 
 #import <Toast/UIView+Toast.h>
 
+@implementation SessionManager
+
++ (instancetype)defaultManager {
+    static dispatch_once_t onceToken;
+    static SessionManager *instance;
+    dispatch_once(&onceToken, ^{
+        instance = [self manager];
+        // 10秒超时
+        instance.requestSerializer.timeoutInterval = 10;
+        // return type
+        instance.responseSerializer = [AFHTTPResponseSerializer serializer];
+        
+        // 请求方式 json
+        instance.requestSerializer = [AFJSONRequestSerializer serializer];
+        
+        instance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", nil];
+    });
+    return instance;
+}
+
+@end
+
 @implementation AFNRequestManager
 + (AFNRequestManager *)sharedUtil {
     static dispatch_once_t onceToken;
@@ -27,25 +49,13 @@
     // add query string...
     NSString *query = params ? AFQueryStringFromParameters(params) : nil;
     if (query && query.length) {
-        urlString = [urlString stringByAppendingFormat:@"?%@", urlString];
+        urlString = [urlString stringByAppendingFormat:@"?%@", query];
     }
-    
-    // create request manager
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    
-    // indicate return type
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", nil];
-    
-    // set timeout (10秒)
-    manager.requestSerializer.timeoutInterval = 10;
-    
+
+    SessionManager *manager = [SessionManager defaultManager];
     // 设置登录后的请求头
-    NSString *token = [[NSUserDefaults standardUserDefaults] stringForKey:@"token"];
-    if (token) {
-        [manager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
-    }
+    NSString *token = [[NSUserDefaults standardUserDefaults] stringForKey:@"TOKEN"];
+    [manager.requestSerializer setValue:token forHTTPHeaderField:@"TOKEN"];
     
     // method
     switch (method) {
@@ -53,10 +63,18 @@
         {
             [manager GET:urlString parameters:nil                                                                   progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 NSString *responseStr = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-                succeed([AFNRequestManager dictionaryWithJsonString:responseStr]);
-                NSLog(@"request success");
+                NSDictionary *response = [AFNRequestManager dictionaryWithJsonString:responseStr];
+                if ([[response objectForKey:@"code"] compare:@"SUCCESS"] != NSOrderedSame) {
+                    [AFNRequestManager showError:[response objectForKey:@"message"]];
+                    succeed(nil);
+                    return;
+                }
+                succeed(response);
             }failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                failure(error);
+                if (failure != nil) {
+                    failure(error);
+                }
+                [AFNRequestManager showError:@"网络连接失败!"];
             }];
         }
             break;
@@ -64,13 +82,18 @@
         {
             [manager POST:urlString parameters:data progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 NSString *responseStr = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-                succeed([AFNRequestManager dictionaryWithJsonString:responseStr]);
-                NSLog(@"request success");
-                
+                NSDictionary *response = [AFNRequestManager dictionaryWithJsonString:responseStr];
+                if ([[response objectForKey:@"code"] compare:@"SUCCESS"] != NSOrderedSame) {
+                    [AFNRequestManager showError:[response objectForKey:@"message"]];
+                    succeed(nil);
+                    return;
+                }
+                succeed(response);
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-//                UIApplication *ap = [UIApplication sharedApplication];
-//                [ap.keyWindow makeToast:@"网络连接失败!" duration:2.0 position:CSToastPositionCenter];
-                failure(error);
+                if (failure != nil) {
+                    failure(error);
+                }
+                [AFNRequestManager showError:@"网络连接失败!"];
             }];
         }
             
@@ -80,24 +103,24 @@
     
 }
 
-+ (void)requestAFURL:(NSString *)urlString params:(id)params imageData:(NSData *)imageData succeed:(void (^)(id))succeed failure:(void (^)(NSError *))failure {
++ (void)requestAFURL:(NSString *)urlString params:(id)params data:(id)data imageData:(NSData *)imageData succeed:(void (^)(id))succeed failure:(void (^)(NSError *))failure {
     // set api addresss
     urlString = [NSString stringWithFormat:@"%@%@", BASE_URL, [urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
     
+    // add query string...
+    NSString *query = params ? AFQueryStringFromParameters(params) : nil;
+    if (query && query.length) {
+        urlString = [urlString stringByAppendingFormat:@"?%@", query];
+    }
+
     // create request manager
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    SessionManager *manager = [SessionManager defaultManager];
     
-    // indicate return type
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    // 设置登录后的请求头
+    NSString *token = [[NSUserDefaults standardUserDefaults] stringForKey:@"TOKEN"];
+    [manager.requestSerializer setValue:token forHTTPHeaderField:@"TOKEN"];
     
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", nil];
-    
-    // set timeout
-    manager.requestSerializer.timeoutInterval = 30;
-    
-    [manager.requestSerializer setValue:@"fjxm/xunjian" forHTTPHeaderField:@"User-Agent"];
-    
-    [manager POST:urlString parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+    [manager POST:urlString parameters:data constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"yyyyMMddHHmmss";
         NSString *str = [formatter stringFromDate:[NSDate date]];
@@ -105,9 +128,20 @@
         [formData appendPartWithFileData:imageData name:@"file" fileName:fileName mimeType:@"image/png"];
     } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *responseStr = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-        succeed([AFNRequestManager dictionaryWithJsonString:responseStr]);
+        
+        NSDictionary *response = [AFNRequestManager dictionaryWithJsonString:responseStr];
+
+        if ([[response objectForKey:@"code"] compare:@"SUCCESS"] != NSOrderedSame) {
+            [AFNRequestManager showError:[response objectForKey:@"message"]];
+            succeed(nil);
+            return;
+        }
+        succeed(response);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        failure(error);
+        if (failure != nil) {
+            failure(error);
+        }
+        [AFNRequestManager showError:@"网络连接失败!"];
     }];
     
 }
@@ -117,15 +151,7 @@
     urlString = [NSString stringWithFormat:@"%@%@", BASE_URL, [urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
     
     // create request manager
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    
-    // indicate return type
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", nil];
-    
-    // set timeout
-    manager.requestSerializer.timeoutInterval = 30;
+    SessionManager *manager = [SessionManager defaultManager];
     
     [manager POST:urlString parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         for (int i = 0; i < imageDataArray.count; i++) {
@@ -152,16 +178,7 @@
     // set api addresss
     urlString = [NSString stringWithFormat:@"%@%@", BASE_URL, [urlString stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
     
-    // create request manager
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    
-    // indicate return type
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", nil];
-    
-    // set timeout
-    manager.requestSerializer.timeoutInterval = 30;
+    SessionManager *manager = [SessionManager defaultManager];
     
     [manager POST:urlString parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         [formData appendPartWithFileData:fileData name:@"file" fileName:@"audio.MP3" mimeType:@"audio/MP3"];
@@ -223,6 +240,11 @@
     [jsonString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     
     return jsonString;
+}
+
++ (void)showError:(NSString *)error {
+    UIApplication *ap = [UIApplication sharedApplication];
+    [ap.keyWindow makeToast:error duration:2.0 position:CSToastPositionCenter];
 }
 
 @end

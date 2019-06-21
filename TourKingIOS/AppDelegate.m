@@ -9,6 +9,10 @@
 #import "AppDelegate.h"
 #import "LoginVC.h"
 #import "TKViewController.h"
+#import <AMapFoundationKit/AMapFoundationKit.h>
+#import "TKLocationManager.h"
+#import "User.h"
+
 @interface AppDelegate ()
 
 @end
@@ -17,7 +21,6 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-        
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     BOOL isLogin = [[userDefault objectForKey:@"ISLOGIN"] isEqualToString:@"ISLOGIN"];
     
@@ -26,7 +29,14 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
+    // 高德地图key
+    [AMapServices sharedServices].apiKey =@"a78fd67b4e7a4dc81ab88b75c70c084a";
+    
     self.window.rootViewController = [[TKViewController alloc] init];
+    if (isLogin) {
+        [[TKLocationManager shareInstance] startUpdatingLocation];
+        [[User shareInstance] startSync];
+    }
 
     if (!isLogin){
         [self.window.rootViewController presentViewController:[[LoginVC alloc] init] animated:NO completion:nil];
@@ -47,11 +57,15 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [[TKLocationManager shareInstance] stopUpdatingLocation];
+    [[User shareInstance] stopSync];
 }
 
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+    [[TKLocationManager shareInstance] startUpdatingLocation];
+    [[User shareInstance] startSync];
 }
 
 

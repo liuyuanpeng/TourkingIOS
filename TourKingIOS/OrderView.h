@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class HomeVC;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface OrderView : UIView
-
+- (instancetype)initWithData:(NSDictionary *)order homeVC:(HomeVC *)vc;
 @end
 
 NS_ASSUME_NONNULL_END

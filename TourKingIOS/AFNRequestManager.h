@@ -11,9 +11,9 @@
 
 
 // server product
-#define BASE_URL @"http://47.105.216.34/v5/"
+#define BASE_URL @"https://apis.kingtrip.vip/v5"
 // image server
-#define IMG_URL @"http://47.105.216.34/v5/"
+#define IMG_URL @"https://apis.kingtrip.vip/v5"
 
 #define MAP_KEY @"a78fd67b4e7a4dc81ab88b75c70c084a"
 
@@ -22,8 +22,12 @@ enum HTTP_METHOD {
     METHOD_GET = 0,
     METHOD_POST = 1
 };
+@interface SessionManager : AFHTTPSessionManager
 
-NS_ASSUME_NONNULL_BEGIN
++ (instancetype)defaultManager;
+
+@end
+
 
 @interface AFNRequestManager : NSObject
 
@@ -39,7 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param urlString server
  @param method get or post
- @param params parameters
+ @param params querys...
+ @param data body
  @param succeed block
  @param failure block
  */
@@ -55,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param succeed block
  @param failure block
  */
-+ (void)requestAFURL:(NSString *)urlString params:(id)params imageData:(NSData *)imageData succeed:(void (^)(id))succeed failure:(void (^)(NSError *))failure;
++ (void)requestAFURL:(NSString *)urlString params:(id)params data:(id)data imageData:(NSData *)imageData succeed:(void (^)(id))succeed failure:(void (^)(NSError *))failure;
 
 
 /**
@@ -107,6 +112,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 + (NSString*)convertToJSONData:(id)infoDict;
-@end
 
-NS_ASSUME_NONNULL_END
++ (void)showError:(NSString *)error;
+@end
