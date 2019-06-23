@@ -78,13 +78,14 @@
         _missionTitle.text = @"未指派任务";
         [self addSubview:_missionTitle];
         
-        UIImageView *timeImg = [[UIImageView alloc] initWithFrame:CGRectMake(self.frame.size.width - 180, 23, 15, 15)];
+        UIImageView *timeImg = [[UIImageView alloc] initWithFrame:CGRectMake(self.frame.size.width - 170, 23, 15, 15)];
         [timeImg setImage:[UIImage imageNamed:@"时间 (1)"]];
         [self addSubview:timeImg];
         
         _missionTime = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.size.width - 165, 20, 150, 20)];
         [_missionTime setText:@"2019-00-00 10:45"];
         [_missionTime setTextAlignment:NSTextAlignmentRight];
+        [_missionTime setFont:[UIFont systemFontOfSize:16]];
         [self addSubview:_missionTime];
         
         UIView *lineSep1 = [[UIView alloc] initWithFrame:CGRectMake(15, 50, self.frame.size.width - 30, 1)];
@@ -183,15 +184,16 @@
 - (void) onMap: (id)sender {
     if ([Utils locationAccess] == NO) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"要使用导航需要打开定位权限!" preferredStyle:UIAlertControllerStyleAlert];
+        __weak UIAlertController *weakAlertController = alertController;
         [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
-            [alertController dismissViewControllerAnimated:NO completion:nil];
+            [weakAlertController dismissViewControllerAnimated:NO completion:nil];
             
         }]];
         
         [alertController addAction:[UIAlertAction actionWithTitle:@"前往设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{UIApplicationOpenURLOptionUniversalLinksOnly : @(NO)} completionHandler:nil];
-            [alertController dismissViewControllerAnimated:NO completion:nil];
+            [weakAlertController dismissViewControllerAnimated:NO completion:nil];
         }]];
         [self.viewcontroller presentViewController:alertController animated:YES completion:nil];
         return;
@@ -206,7 +208,11 @@
 }
 
 - (void)onRight: (id)sender {
+    if ([User shareInstance].id == nil) {
+        return;
+    }
     UIButton *target = sender;
+    __weak UIViewController *viewController = self.viewcontroller;
     if ([target.titleLabel.text compare:@"我要接单"] == NSOrderedSame) {
         // 接单
         [AFNRequestManager requestAFURL:@"/travel/driver/accept_order" httpMethod:METHOD_POST params:@{@"order_id":[_data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
@@ -214,7 +220,7 @@
                 return;
             }
             // 更新任务列表
-            MissionVC *missionVC = (MissionVC *)self.viewcontroller;
+            MissionVC *missionVC = (MissionVC *)viewController;
             [missionVC refreshData];
         } failure:nil];
     } else if ([target.titleLabel.text compare:@"确认送达"] == NSOrderedSame) {
@@ -227,7 +233,7 @@
                     return;
                 }
                 // 更新已接单列表
-                HomeVC *homeVC = (HomeVC *)self.viewcontroller;
+                HomeVC *homeVC = (HomeVC *)viewController;
                 [homeVC refreshData];
                 
             } failure:nil];
@@ -238,22 +244,23 @@
     } else {
         //申请改派
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"确定要申请改派该订单吗？" preferredStyle:UIAlertControllerStyleAlert];
+        __weak UIAlertController *weakAlertController = alertController;
         [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
-            [alertController dismissViewControllerAnimated:NO completion:nil];
+            [weakAlertController dismissViewControllerAnimated:NO completion:nil];
             
         }]];
         
         [alertController addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
-            [alertController dismissViewControllerAnimated:NO completion:nil];
+            [weakAlertController dismissViewControllerAnimated:NO completion:nil];
             // 改派订单
             [AFNRequestManager requestAFURL:@"/travel/driver/change_order" httpMethod:METHOD_POST params:@{@"order_id":[self.data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
                 if (ret == nil) {
                     return;
                 }
                 // 更新已接单列表
-                HomeVC *homeVC = (HomeVC *)self.viewcontroller;
+                HomeVC *homeVC = (HomeVC *)viewController;
                 [homeVC refreshData];
                 
             } failure:nil];

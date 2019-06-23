@@ -53,11 +53,14 @@
 }
 
 - (void)refreshData {
+    
+    __weak UITableView *tableView = self.tableView;
+
     [[OnlineOrders shareInstance] getList:^(BOOL ok) {
-        [self.tableView.mj_header endRefreshing];
         if (ok) {
-            [self.tableView reloadData];
+            [tableView reloadData];
         }
+        [tableView.mj_header endRefreshing];
     }];
 }
 

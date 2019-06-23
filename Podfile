@@ -13,6 +13,6 @@ target 'TourKingIOS' do
   pod 'AMapNavi-NO-IDFA', '~> 6.8'
   pod 'SRMModalViewController', '~> 0.0'
   pod 'DateTools', '~> 2.0'
-  pod 'MJRefresh', '~> 3.2'
+  pod 'MJRefresh', '3.2'
 end
 

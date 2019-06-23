@@ -7,6 +7,7 @@
 //
 
 #import "WebVC.h"
+#import <WebKit/WKWebView.h>
 
 @implementation WebVC
 
@@ -48,7 +49,7 @@
         
         [navigationBar setItems:[NSArray arrayWithObject: navigationBarTitle]];
         
-        UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, rect.size.height + 44, rect.size.width, rScreen.size.height - rect.size.height - 44)];
+        WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, rect.size.height + 44, rect.size.width, rScreen.size.height - rect.size.height - 44)];
         [self.view addSubview:webView];
         
         [webView loadRequest:request];    }

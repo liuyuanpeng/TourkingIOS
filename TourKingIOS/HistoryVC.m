@@ -24,10 +24,11 @@
 }
 
 - (void)refreshData {
+    __weak UITableView *tableView = self.tableView;
     [[HistoryOrders shareInstance] getList:^(BOOL ok) {
-        [self.tableView.mj_header endRefreshing];
         if (ok){
-            [self.tableView reloadData];
+            [tableView reloadData];
+            [tableView.mj_header endRefreshing];
         }
     }];
 }
@@ -38,9 +39,10 @@
         [self.tableView.mj_footer endRefreshing];
         return;
     }
+    __weak UITableView *tableView = self.tableView;
     [[HistoryOrders shareInstance] loadMore:^(BOOL ok) {
-        [self.tableView.mj_footer endRefreshing];
-        [self.tableView reloadData];
+        [tableView.mj_footer endRefreshing];
+        [tableView reloadData];
     }];
 }
 

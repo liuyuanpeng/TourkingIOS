@@ -41,21 +41,28 @@
 - (void)onChangeOrder:(id)sender {
     // 申请改派
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"确定要申请改派该订单吗？" preferredStyle:UIAlertControllerStyleAlert];
+    __weak UIAlertController* weakAlertContrller = alertController;
     [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         
-        [alertController dismissViewControllerAnimated:NO completion:nil];
+        [weakAlertContrller dismissViewControllerAnimated:NO completion:nil];
         
     }]];
     
+    __weak __typeof(self)weakSelf = self;
+
     [alertController addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
-        [alertController dismissViewControllerAnimated:NO completion:nil];
+        [weakAlertContrller dismissViewControllerAnimated:NO completion:nil];
+        if ([User shareInstance].id == nil) {
+            return;
+        }
         // 改派订单
+        __weak __typeof(self)weakweakSelf = weakSelf;
         [AFNRequestManager requestAFURL:@"/travel/driver/change_order" httpMethod:METHOD_POST params:@{@"order_id":[self.data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
             if (ret == nil) {
                 return;
             }
-            [self dismissViewControllerAnimated:NO completion:nil];
+            [weakweakSelf dismissViewControllerAnimated:NO completion:nil];
         } failure:nil];
         
         
@@ -427,17 +434,18 @@
 }
 
 - (void)onBottomBtn:(id)sender {
-    if (self.data == nil) {
+    if (self.data == nil || [User shareInstance] == nil) {
         return;
     }
     NSString *orderStatus = [self.data objectForKey:@"order_status"];
-    
+    __weak __typeof(self)weakSelf = self;
     if ([orderStatus compare:@"ACCEPTED"] == NSOrderedSame) {
         //到达约定点
         if ([User shareInstance].bBusy) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"操作不允许" message:@"您现在有进行中的任务，请先完成任务" preferredStyle:UIAlertControllerStyleAlert];
+            __weak UIAlertController *weakAlertController = alertController;
             [alertController addAction:[UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [alertController dismissViewControllerAnimated:NO completion:nil];
+                [weakAlertController dismissViewControllerAnimated:NO completion:nil];
             }]];
             [self presentViewController:alertController animated:NO completion:nil];
             return;
@@ -447,11 +455,11 @@
             if (ret == nil) {
                 return;
             }
-            if (self.data) {
-                [self.data setObject:@"ON_THE_WAY" forKey:@"order_status"];
+            if (weakSelf.data) {
+                [weakSelf.data setObject:@"ON_THE_WAY" forKey:@"order_status"];
                 [User shareInstance].bBusy = YES;
             }
-            [self refreshView];
+            [weakSelf refreshView];
         } failure:nil];
         
     } else {
@@ -459,11 +467,12 @@
         AlertView *alertView = [AlertView initWithCancelBlock:^{
             NSLog(@"cancel");
         } okBlock:^{
+            __weak __typeof(self)weakweakSelf = weakSelf;
             [AFNRequestManager requestAFURL:@"/travel/driver/done_order" httpMethod:METHOD_POST params:@{@"order_id":[self.data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
                 if (ret == nil) {
                     return;
                 }
-                [self dismissViewControllerAnimated:NO completion:nil];
+                [weakweakSelf dismissViewControllerAnimated:NO completion:nil];
                 
             } failure:nil];
 

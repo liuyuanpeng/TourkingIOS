@@ -33,11 +33,12 @@
 }
 
 - (void)refreshData {
+    __weak __typeof(self)weakSelf = self;
     [[Income shareInstance] getListWithMonth:_keyMonth callback:^(BOOL ok) {
-        [self.tableView.mj_header endRefreshing];
-        self.income.text = [NSString stringWithFormat:@"收入 ￥%.2f", [Income shareInstance].total];
+        [weakSelf.tableView.mj_header endRefreshing];
+        weakSelf.income.text = [NSString stringWithFormat:@"收入 ￥%.2f", [Income shareInstance].total];
         if (ok){
-            [self.tableView reloadData];
+            [weakSelf.tableView reloadData];
         }
     }];
 }

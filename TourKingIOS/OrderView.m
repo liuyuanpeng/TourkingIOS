@@ -106,8 +106,9 @@
         [_acceptBtn setBackgroundImage:[UIImage imageNamed:@"Group 7"] forState:UIControlStateNormal];
         [_acceptBtn addTarget:self action:@selector(onAccept:) forControlEvents:UIControlEventTouchUpInside];
         _acceptBtn.titleEdgeInsets = UIEdgeInsetsMake(40, 0, 10, 0);
+        __weak __typeof(self)weakSelf = self;
         [_acceptBtn startWithTime:30 title:@"" completion:^{
-            [self onClose];
+            [weakSelf onClose];
         }];
         [self addSubview:_acceptBtn];
         
@@ -139,17 +140,18 @@
 }
 
 - (void)onAccept:(id)sender {
+    if ([User shareInstance].id == nil) return;
     if (_data != nil) {
         [[NowOrders shareInstance] insertTrashOrder:[_data objectForKey:@"id"]];
     }
-    
+    __weak HomeVC *homeVC = self.homeVC;
     [AFNRequestManager requestAFURL:@"/travel/driver/accept_order" httpMethod:METHOD_POST params:@{@"order_id":[_data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
         if (ret == nil) {
             return;
         }
         // 更新任务列表
-        if (self.homeVC) {
-            [self.homeVC refreshData];
+        if (homeVC) {
+            [homeVC refreshData];
         }
     } failure:nil];
     [[SRMModalViewController sharedInstance] hide];

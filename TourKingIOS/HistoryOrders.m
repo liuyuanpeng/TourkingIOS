@@ -29,18 +29,23 @@
     return self;
 }
 - (void)getList:(void (^)(BOOL))loadingOK {
+    if ([User shareInstance].id == nil) {
+        loadingOK(NO);
+        return;
+    }
     self.page = 0;
+    __weak __typeof(self)weakSelf = self;
     [AFNRequestManager requestAFURL:@"/travel/driver/driver_order_page" httpMethod:METHOD_POST params:@{@"driver_user_id":[User shareInstance].id} data:@{@"page":@0, @"size":@5, @"sort_data_list":@[]} succeed:^(NSDictionary *ret) {
         if (ret == nil) {
             loadingOK(NO);
             return;
         }
         NSDictionary *data = [ret objectForKey:@"data"];
-        self.orders = [NSArray arrayWithArray:[data objectForKey:@"data_list"]];
-        if (self.orders.count < 5) {
-            self.noMore = YES;
+        weakSelf.orders = [NSArray arrayWithArray:[data objectForKey:@"data_list"]];
+        if (weakSelf.orders.count < 5) {
+            weakSelf.noMore = YES;
         } else {
-            self.noMore = NO;
+            weakSelf.noMore = NO;
         }
         loadingOK(YES);
     } failure:^(NSError *error) {
@@ -50,11 +55,12 @@
 
 
 - (void)loadMore:(void(^)(BOOL ok))loadingOK{
-    if (self.noMore) {
+    if (self.noMore || [User shareInstance].id == nil) {
         loadingOK(NO);
         return;
     }
     self.page++;
+    __weak __typeof(self)weakSelf = self;
     [AFNRequestManager requestAFURL:@"/travel/driver/driver_order_page" httpMethod:METHOD_POST params:@{@"driver_user_id":[User shareInstance].id} data:@{@"page":[NSNumber numberWithInteger:self.page], @"size":@5} succeed:^(NSDictionary *ret) {
         if (ret == nil)
         {
@@ -62,11 +68,11 @@
             return;
         }
         NSDictionary *data = [ret objectForKey:@"data"];
-        self.orders = [self.orders arrayByAddingObjectsFromArray:[data objectForKey:@"data_list"]];
-        if (self.orders.count%5 == 0) {
-            self.noMore = NO;
+        weakSelf.orders = [weakSelf.orders arrayByAddingObjectsFromArray:[data objectForKey:@"data_list"]];
+        if (weakSelf.orders.count%5 == 0) {
+            weakSelf.noMore = NO;
         } else {
-            self.noMore = YES;
+            weakSelf.noMore = YES;
         }
         loadingOK(YES);
     } failure:^(NSError *error) {

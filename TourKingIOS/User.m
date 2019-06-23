@@ -62,8 +62,10 @@
         self.id = [userDefaults objectForKey:@"USER_ID"];
     }
     if (self.id == nil) {
+        loadingOK(NO);
         return;
     }
+    __weak __typeof(self)weakSelf = self;
     [AFNRequestManager requestAFURL:@"/travel/driver/get" httpMethod:METHOD_GET params:@{@"user_id": self.id} data:nil succeed:^(NSDictionary *ret) {
         if (ret == nil)
         {
@@ -72,12 +74,12 @@
         }
         NSDictionary *data = [ret objectForKey:@"data"];
         NSDictionary *driver = [data objectForKey:@"driver"];
-        self.evaluate =[[driver valueForKey:@"evaluate"] doubleValue];
+        weakSelf.evaluate =[[driver valueForKey:@"evaluate"] doubleValue];
         NSDictionary *user = [data objectForKey:@"user"];
-        self.id = [user objectForKey:@"id"];
-        self.name = [user objectForKey:@"name"];
-        self.phone =[user objectForKey:@"mobile"];
-        self.avatar = [user objectForKey:@"avatar"];
+        weakSelf.id = [user objectForKey:@"id"];
+        weakSelf.name = [user objectForKey:@"name"];
+        weakSelf.phone =[user objectForKey:@"mobile"];
+        weakSelf.avatar = [user objectForKey:@"avatar"];
         loadingOK(YES);
     } failure:^(NSError *error) {
         loadingOK(NO);
@@ -85,6 +87,7 @@
 }
 
 - (void)startSync {
+    __weak __typeof(self)weakSelf = self;
     if (_timer == nil) {
         dispatch_queue_t queue = dispatch_get_main_queue();
         _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
@@ -93,22 +96,30 @@
         // 设置回调
         dispatch_source_set_event_handler(_timer, ^{
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self syncInfo];
+                [weakSelf syncInfo];
                 
             });
         });
     }
-    dispatch_resume(_timer);
+    if (self.bSyncRunning == NO) {
+        dispatch_resume(_timer);
+        self.bSyncRunning = YES;
+    }
 }
 
 - (void)stopSync {
-    if(_timer)dispatch_suspend(_timer);
+    if(_timer){
+        dispatch_suspend(_timer);
+        self.bSyncRunning = NO;
+    }
 }
 
 - (void)removeSync {
-    if (_timer) dispatch_cancel(_timer);
-    _timer = nil;
-}
+    if (_timer) {
+        self.bSyncRunning = NO;
+        dispatch_cancel(_timer);
+        _timer = nil;
+    }}
 
 - (void)dealloc {
     if (_timer) dispatch_cancel(_timer);
@@ -130,16 +141,21 @@
 }
 
 - (void)updateAvatar:(NSString *)path {
+    if (self.id == nil) {
+        return;
+    }
     NSDictionary *data = @{
                           @"avatar": [NSString stringWithString:path],
                           @"user_id": [NSString stringWithString:self.id],
                           @"mobile": self.phone,
                           @"name": self.name
                           };
+    
+    __weak __typeof(self)weakSelf = self;
     [AFNRequestManager requestAFURL:@"/user/update" httpMethod:METHOD_POST params:nil data:data succeed:^(NSDictionary *ret) {
         if (ret != nil) {
             NSLog(@"更新头像成功");
-            self.avatar = [NSString stringWithString:path];
+            weakSelf.avatar = [NSString stringWithString:path];
         }
     } failure:nil];
 }

@@ -21,14 +21,18 @@
 }
 
 - (void)getList:(void(^)(BOOL ok))loadingOK {
-    
+    if ([User shareInstance].id == nil) {
+        loadingOK(NO);
+        return;
+    }
+    __weak __typeof(self)weakSelf = self;
     [AFNRequestManager requestAFURL:@"/travel/order/driver/accepted_list" httpMethod:METHOD_POST params:@{@"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
         if (ret == nil) {
             loadingOK(NO);
             return;
         }
-        self.orders = [NSArray arrayWithArray:[ret objectForKey:@"data"]];
-        [self checkBusy];
+        weakSelf.orders = [NSArray arrayWithArray:[ret objectForKey:@"data"]];
+        [weakSelf checkBusy];
         loadingOK(YES);
     } failure:^(NSError *error) {
         loadingOK(NO);

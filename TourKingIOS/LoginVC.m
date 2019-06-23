@@ -101,12 +101,19 @@ NSString *TEST_ACCOUNT = @"18559643214";
     [_login addTarget:self action:@selector(onLogin:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_login];
     
-    // 是否有手机号
+    // 记住最近登录的账号
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    if ([userDefault objectForKey:@"ISLOGIN"] != nil) {
+    if ([userDefault objectForKey:@"USER"] != nil) {
         [_phone setText:[userDefault objectForKey:@"USER"]];
     }
-    [_phone setText:@"18559643214"];
+    
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(fingerTapped:)];
+    [self.view addGestureRecognizer:singleTap];
+}
+
+// 点击空白处收键盘
+-(void)fingerTapped:(UITapGestureRecognizer *)gestureRecognizer {
+    [self.view endEditing:YES];
 }
 
 -(UIView*)createView:(Class)cls
@@ -165,13 +172,14 @@ NSString *TEST_ACCOUNT = @"18559643214";
         [self.view makeToast:@"验证码不正确" duration:2 position:CSToastPositionCenter];
         return;
     }
-    
+    __weak __typeof(self) weakSelf = self;
+
     [AFNRequestManager requestAFURL:@"/user/captcha_login" httpMethod:METHOD_POST params:nil data:@{@"captcha":_captcha.text, @"captcha_session_id":[User shareInstance].captcha_session_id, @"username":_phone.text} succeed:^(NSDictionary *ret) {
         if (ret == nil) return;
         [[User shareInstance] setData:[ret objectForKey:@"data"]];
         // 登录成功后退出登录窗口
         [[User shareInstance] loginSuccess];
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [weakSelf dismissViewControllerAnimated:YES completion:nil];
     } failure:nil];
     
     

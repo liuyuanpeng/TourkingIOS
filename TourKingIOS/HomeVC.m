@@ -56,19 +56,21 @@
     } else {
         [rightBtn setTitle:@"开启抢单" forState:UIControlStateNormal];
     }
+    __weak UITableView *tableView = self.tableView;
     [[User shareInstance] getDriverInfo:^(BOOL ok) {
         if (ok){
-            [self.tableView.mj_header beginRefreshing];
+            [tableView.mj_header beginRefreshing];
         }
     }];
 }
 
 - (void)refreshData {
+    __weak UITableView *tableView = self.tableView;
     [[AcceptedOrders shareInstance] getList:^(BOOL ok) {
-        [self.tableView.mj_header endRefreshing];
         if (ok) {
-            [self.tableView reloadData];
+            [tableView reloadData];
         }
+        [self.tableView.mj_header endRefreshing];
     }];
 }
 

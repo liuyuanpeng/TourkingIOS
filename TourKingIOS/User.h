@@ -28,4 +28,5 @@
 @property (nonatomic, strong) NSString *captcha_session_id;
 @property (nonatomic, strong) NSDictionary *coordinate;
 @property (nonatomic, assign) BOOL bBusy;
+@property (nonatomic, assign) BOOL bSyncRunning;
 @end

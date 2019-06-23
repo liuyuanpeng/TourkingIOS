@@ -44,8 +44,9 @@
     return YES;
 }
 
-- (void)loginSuccess{
-    
+- (void)logout {
+    [[User shareInstance] logOut];
+    [self.window.rootViewController presentViewController:[[LoginVC alloc] init] animated:NO completion:nil];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

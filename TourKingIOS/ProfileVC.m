@@ -28,37 +28,40 @@
 
 @implementation ProfileVC
 - (void)viewWillAppear:(BOOL)animated {
-    if ([User shareInstance].id ) {
+    
+    __weak __typeof(self)weakSelf = self;
+
+    if ([User shareInstance].id != nil) {
         if ([User shareInstance].avatar == nil || [[User shareInstance].avatar compare:@""] == NSOrderedSame) {
-            self.avatar.image = [UIImage imageNamed:@"司机头像"];
+            weakSelf.avatar.image = [UIImage imageNamed:@"司机头像"];
         } else {
-            self.avatar.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[User shareInstance].avatar]]];
+            weakSelf.avatar.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[User shareInstance].avatar]]];
         }
-        if (self.pickerImg) {
-            self.avatar.image = self.pickerImg;
+        if (weakSelf.pickerImg) {
+            weakSelf.avatar.image = weakSelf.pickerImg;
         }
         self.username.text = [User shareInstance].name;
         [self setStars:round([User shareInstance].evaluate)];
     } else {
         [[User shareInstance] getDriverInfo:^(BOOL ok) {
             if ([User shareInstance].avatar == nil || [[User shareInstance].avatar compare:@""] == NSOrderedSame) {
-                self.avatar.image = [UIImage imageNamed:@"司机头像"];
+                weakSelf.avatar.image = [UIImage imageNamed:@"司机头像"];
             } else {
-                self.avatar.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[User shareInstance].avatar]]];
+                weakSelf.avatar.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[User shareInstance].avatar]]];
             }
-            if (self.pickerImg) {
-                self.avatar.image = self.pickerImg;
+            if (weakSelf.pickerImg) {
+                weakSelf.avatar.image = weakSelf.pickerImg;
             }
-            self.username.text = [User shareInstance].name;
-            [self setStars:round([User shareInstance].evaluate)];
+            weakSelf.username.text = [User shareInstance].name;
+            [weakSelf setStars:round([User shareInstance].evaluate)];
         }];
 
     }
     if ([Income shareInstance].todayTotal) {
-        self.incomeTip.text = [NSString stringWithFormat:@"今日收入%.2f元", [Income shareInstance].todayTotal];
+        weakSelf.incomeTip.text = [NSString stringWithFormat:@"今日收入%.2f元", [Income shareInstance].todayTotal];
     } else {
         [[Income shareInstance] getListToday:^(BOOL ok) {
-            self.incomeTip.text = [NSString stringWithFormat:@"今日收入%.2f元", [Income shareInstance].todayTotal];
+            weakSelf.incomeTip.text = [NSString stringWithFormat:@"今日收入%.2f元", [Income shareInstance].todayTotal];
         }];
     }
 }
@@ -189,15 +192,16 @@
 - (void)changeAvatar:(UITapGestureRecognizer *)recognizer {
     if ([Utils photoAccess] == NO) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"要使用相册需要打开权限!" preferredStyle:UIAlertControllerStyleAlert];
+        __weak UIAlertController *weakAlertController =  alertController;
         [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
-            [alertController dismissViewControllerAnimated:NO completion:nil];
+            [weakAlertController dismissViewControllerAnimated:NO completion:nil];
             
         }]];
         
         [alertController addAction:[UIAlertAction actionWithTitle:@"前往设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{UIApplicationOpenURLOptionUniversalLinksOnly : @(NO)} completionHandler:nil];
-            [alertController dismissViewControllerAnimated:NO completion:nil];
+            [weakAlertController dismissViewControllerAnimated:NO completion:nil];
         }]];
         [self presentViewController:alertController animated:YES completion:nil];
         return;
@@ -205,15 +209,16 @@
     
     if ([Utils cameraAccess] == NO) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"要使用相机需要打开权限!" preferredStyle:UIAlertControllerStyleAlert];
+        __weak UIAlertController *weakAlertController =  alertController;
         [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
-            [alertController dismissViewControllerAnimated:NO completion:nil];
+            [weakAlertController dismissViewControllerAnimated:NO completion:nil];
             
         }]];
         
         [alertController addAction:[UIAlertAction actionWithTitle:@"前往设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{UIApplicationOpenURLOptionUniversalLinksOnly : @(NO)} completionHandler:nil];
-            [alertController dismissViewControllerAnimated:NO completion:nil];
+            [weakAlertController dismissViewControllerAnimated:NO completion:nil];
         }]];
         [self presentViewController:alertController animated:YES completion:nil];
         return;

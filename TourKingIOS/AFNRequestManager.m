@@ -7,7 +7,7 @@
 //
 
 #import "AFNRequestManager.h"
-
+#import "AppDelegate.h"
 #import <Toast/UIView+Toast.h>
 
 @implementation SessionManager
@@ -64,9 +64,15 @@
             [manager GET:urlString parameters:nil                                                                   progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 NSString *responseStr = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
                 NSDictionary *response = [AFNRequestManager dictionaryWithJsonString:responseStr];
+                
                 if ([[response objectForKey:@"code"] compare:@"SUCCESS"] != NSOrderedSame) {
                     [AFNRequestManager showError:[response objectForKey:@"message"]];
                     succeed(nil);
+                    if ([[response objectForKey:@"code"] compare:@"TOKEN_SESSION_NOT_FOUND"] == NSOrderedSame) {
+                        // token过期处理
+                        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                        [delegate logout];
+                    }
                     return;
                 }
                 succeed(response);

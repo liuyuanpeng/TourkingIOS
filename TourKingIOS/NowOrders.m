@@ -52,11 +52,12 @@
     if ([User shareInstance].id == nil) {
         return;
     }
+    __weak __typeof(self)weakSelf = self;
     [AFNRequestManager requestAFURL:@"/travel/order/driver/now" httpMethod:METHOD_POST params:@{@"driver_user_id": [User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
         if (ret == nil) {
             return;
         }
-        self.orders = [NSArray arrayWithArray:[ret objectForKey:@"data"]];
+        weakSelf.orders = [NSArray arrayWithArray:[ret objectForKey:@"data"]];
     } failure:nil];
 }
 
@@ -84,9 +85,10 @@
         dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(20.0 * NSEC_PER_SEC));
         dispatch_source_set_timer(_remoteTimer, start, interval, 0);
         // 设置回调
+        __weak __typeof(self)weakSelf = self;
         dispatch_source_set_event_handler(_remoteTimer, ^{
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self getRemoteData];
+                [weakSelf getRemoteData];
             });
         });
     }
@@ -97,10 +99,11 @@
         dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC));
         dispatch_source_set_timer(_delegateTimer, start, interval, 0);
         // 设置回调
+        __weak __typeof(self)weakSelf = self;
         dispatch_source_set_event_handler(_delegateTimer, ^{
             dispatch_async(dispatch_get_main_queue(), ^{
-                if ([self.delegate respondsToSelector:@selector(showModalWithOrder:)]) {
-                    [self.delegate showModalWithOrder:[self getFilterOrder]];
+                if ([weakSelf.delegate respondsToSelector:@selector(showModalWithOrder:)]) {
+                    [weakSelf.delegate showModalWithOrder:[weakSelf getFilterOrder]];
                 }
             });
         });
