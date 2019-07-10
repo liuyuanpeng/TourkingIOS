@@ -20,6 +20,7 @@
 @implementation HistoryVC
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self.tableView.mj_header beginRefreshing];
 }
 
@@ -67,8 +68,6 @@
     [navigationBar pushNavigationItem: navigationBarTitle animated:YES];
     
     [self.view addSubview: navigationBar];
-    
-    //创建UIBarButton 可根据需要选择适合自己的样式
     
     //创建UIBarButton 可根据需要选择适合自己的样式
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"i_back"] style:UIBarButtonItemStylePlain target:self action:@selector(navigationBackButton:)];

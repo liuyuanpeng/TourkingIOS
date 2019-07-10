@@ -14,6 +14,7 @@
 #import "HomeVC.h"
 #import "AFNRequestManager.h"
 #import "User.h"
+#import "TKLocationManager.h"
 
 @interface OrderView ()
 {
@@ -39,8 +40,8 @@
         _startPlace.text = [order objectForKey:@"start_place"];
         _endPlace.text = [order objectForKey:@"target_place"];
         _startTime.text = [[NSDate dateWithTimeIntervalSince1970:[[order objectForKey:@"start_time"] doubleValue]/1000] formattedDateWithFormat:@"时间: yyyy-MM-dd HH:mm"];
-        NSNumber *kilo = [order objectForKey:@"kilo"];
-        _kilo.text = [NSString stringWithFormat:@"距离您%.2fkm", [kilo isEqual:[NSNull null]] ? 0.0 : [kilo doubleValue]/1000];
+        double distance = [[TKLocationManager shareInstance] getDistanceWithLatitude:[[order objectForKey:@"start_latitude"]doubleValue] longitude:[[order objectForKey:@"start_longitude"]doubleValue]];
+        _kilo.text = [NSString stringWithFormat:@"距离您%.2fkm", distance/1000.0];
     }
     return self;
 }
@@ -119,7 +120,6 @@
         _kilo = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, self.frame.size.width-30, 24)];
         [_kilo setFont:[UIFont systemFontOfSize:24]];
         _kilo.textAlignment = NSTextAlignmentCenter;
-        _kilo.text = @"距离您1232.32km";
         [_kilo setTextColor:[UIColor whiteColor]];
         [bottomView addSubview:_kilo];
     }
@@ -144,6 +144,7 @@
     if (_data != nil) {
         [[NowOrders shareInstance] insertTrashOrder:[_data objectForKey:@"id"]];
     }
+    if ([_data objectForKey:@"id"] == nil) return;
     __weak HomeVC *homeVC = self.homeVC;
     [AFNRequestManager requestAFURL:@"/travel/driver/accept_order" httpMethod:METHOD_POST params:@{@"order_id":[_data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
         if (ret == nil) {

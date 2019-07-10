@@ -50,6 +50,8 @@
 }
 
 - (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [super viewWillAppear:animated];
     UIButton *rightBtn = (UIButton *)self.navigationItem.rightBarButtonItem.customView;
     if ([NowOrders shareInstance].isListening) {
         [rightBtn setTitle:@"关闭抢单" forState:UIControlStateNormal];

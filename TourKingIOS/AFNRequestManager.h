@@ -14,8 +14,6 @@
 // image server
 #define IMG_URL @"https://apis.kingtrip.vip/v5"
 
-#define MAP_KEY @"a78fd67b4e7a4dc81ab88b75c70c084a"
-
 #pragma mark - networking request type
 enum HTTP_METHOD {
     METHOD_GET = 0,

@@ -8,6 +8,7 @@
 
 #import "TKLocationManager.h"
 #import "User.h"
+#import <AMapNaviKit/AMapNaviKit.h>
 
 @interface TKLocationManager () <CLLocationManagerDelegate>
 
@@ -28,6 +29,7 @@
     if (self) {
         self.delegate = self;
         self.desiredAccuracy = kCLLocationAccuracyBest;
+        [self requestAlwaysAuthorization];
     }
     return self;
 }
@@ -91,6 +93,19 @@
     ret += (20.0 * sin(x * M_PI) + 40.0 * sin(x / 3.0 * M_PI)) * 2.0 / 3.0;
     ret += (150.0 * sin(x / 12.0 * M_PI) + 300.0 * sin(x / 30.0 * M_PI)) * 2.0 / 3.0;
     return ret;
+}
+
+- (CLLocationDistance)getDistanceWithLatitude:(double)latitude longitude:(double)longitude {
+    if ([User shareInstance].id == nil || [User shareInstance].coordinate == nil) return 0.0f;
+    NSDictionary *coordinate = [User shareInstance].coordinate;
+    double _latitude = [[coordinate objectForKey:@"latitude"]doubleValue];
+    double _longitude = [[coordinate objectForKey:@"longitude"] doubleValue];
+    
+    MAMapPoint point1 = MAMapPointForCoordinate(CLLocationCoordinate2DMake(_latitude,_longitude));
+    MAMapPoint point2 = MAMapPointForCoordinate(CLLocationCoordinate2DMake(latitude,longitude));
+    //2.计算距离
+    CLLocationDistance distance = MAMetersBetweenMapPoints(point1,point2);
+    return distance;
 }
 
 

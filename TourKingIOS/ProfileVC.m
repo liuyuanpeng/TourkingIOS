@@ -29,10 +29,12 @@
 @implementation ProfileVC
 - (void)viewWillAppear:(BOOL)animated {
     
+    [super viewWillAppear:animated];
+    
     __weak __typeof(self)weakSelf = self;
 
     if ([User shareInstance].id != nil) {
-        if ([User shareInstance].avatar == nil || [[User shareInstance].avatar compare:@""] == NSOrderedSame) {
+        if ([[User shareInstance].avatar isEqual:[NSNull null]] || [[User shareInstance].avatar compare:@""] == NSOrderedSame) {
             weakSelf.avatar.image = [UIImage imageNamed:@"司机头像"];
         } else {
             weakSelf.avatar.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[User shareInstance].avatar]]];
@@ -67,6 +69,8 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [super viewWillAppear:animated];
     self.pickerImg = nil;
 }
 

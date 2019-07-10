@@ -64,8 +64,12 @@
 - (void)checkDelete {
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     NSNumber *lastUpdate = [userDefault valueForKey:@"LAST_UPDATE"];
-    NSTimeInterval preInterval = lastUpdate ? [lastUpdate doubleValue] : 0;
-    NSLog(@"%f", preInterval);
+    NSTimeInterval preInterval;
+    if ([lastUpdate isEqual:[NSNull null]] || lastUpdate == nil) {
+        preInterval = 0;
+    } else {
+        preInterval = [lastUpdate doubleValue];
+    }
     NSTimeInterval deleteInterval = [Utils getDeleteTimeInterval];
     NSTimeInterval nowInterval = [NSDate date].timeIntervalSince1970;
     if (nowInterval >= deleteInterval && preInterval <= deleteInterval) {
@@ -75,13 +79,14 @@
 }
 
 - (void)startListen {
-    [self checkDelete];
+//    [self checkDelete];
+    [[DBManager shareInstance] deleteOrders];
     // 立即执行...
     [self getRemoteData];
     if (_remoteTimer == nil) {
         dispatch_queue_t queue = dispatch_get_main_queue();
         _remoteTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
-        uint64_t interval = (uint64_t)(20.0 * NSEC_PER_SEC);
+        uint64_t interval = (uint64_t)(3.0 * NSEC_PER_SEC);
         dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(20.0 * NSEC_PER_SEC));
         dispatch_source_set_timer(_remoteTimer, start, interval, 0);
         // 设置回调
@@ -103,7 +108,13 @@
         dispatch_source_set_event_handler(_delegateTimer, ^{
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([weakSelf.delegate respondsToSelector:@selector(showModalWithOrder:)]) {
-                    [weakSelf.delegate showModalWithOrder:[weakSelf getFilterOrder]];
+                    NSDictionary* order = [weakSelf getFilterOrder];
+                    if (order == nil) {
+                        [[DBManager shareInstance] deleteOrders];
+                        [weakSelf.delegate showModalWithOrder:[weakSelf getFilterOrder]];
+                    } else {
+                        [weakSelf.delegate showModalWithOrder:order];
+                    }
                 }
             });
         });

@@ -13,12 +13,15 @@
 #import <SRMModalViewController.h>
 #import "OrderView.h"
 #import "NowOrders.h"
+#import <AVFoundation/AVFoundation.h>
+#import "Utils.h"
 
 @interface TKViewController ()<SRMModalViewControllerDelegate, NowOrdersDelegate>
 {
     BOOL _bModalShow;
     HomeVC *_homeVC;
 }
+@property (nonatomic, strong) AVAudioPlayer *audioPlayer;
 @end
 
 @implementation TKViewController
@@ -78,6 +81,9 @@
     self.viewControllers = @[homeNav, missionNav, profileNav];
     [SRMModalViewController sharedInstance].delegate = self;
     [NowOrders shareInstance].delegate = self;
+    
+    NSURL *url = [[NSBundle mainBundle] URLForResource:@"reminder.mp3" withExtension:nil];
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
 }
 
 // 关闭/开启抢单
@@ -86,6 +92,24 @@
         [sender setTitle:@"关闭抢单" forState:UIControlStateNormal];
         [[NowOrders shareInstance] startListen];
     } else {
+        if ([Utils locationAccess] == NO) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"要使用定位需要打开权限!" preferredStyle:UIAlertControllerStyleAlert];
+            __weak UIAlertController *weakAlertController = alertController;
+            [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                
+                [weakAlertController dismissViewControllerAnimated:NO completion:nil];
+                
+            }]];
+            
+            [alertController addAction:[UIAlertAction actionWithTitle:@"前往设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{UIApplicationOpenURLOptionUniversalLinksOnly : @(NO)} completionHandler:nil];
+                [weakAlertController dismissViewControllerAnimated:NO completion:nil];
+            }]];
+            [self presentViewController:alertController animated:YES completion:nil];
+            return;
+        }
+
+        
         [sender setTitle:@"开启抢单" forState:UIControlStateNormal];
         [[NowOrders shareInstance] stopListen];
     }
@@ -110,6 +134,7 @@
     if (_bModalShow || order == nil) {
         return;
     }
+    [self.audioPlayer play];
     OrderView *orderView = [[OrderView alloc] initWithData:order homeVC:_homeVC];
     [[SRMModalViewController sharedInstance] showView:orderView];
 }

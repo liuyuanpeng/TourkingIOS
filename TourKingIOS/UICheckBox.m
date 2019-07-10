@@ -14,15 +14,15 @@
  * 初始化checkbox按钮
  */
 - (UICheckBox *)initWithFrame:(CGRect)frame {
-    if ([super initWithFrame:frame]) {
+    self = [super initWithFrame:frame];
+    if (self) {
         // 开始的时候设置复选框是未选中的
         self.selected = NO;
-        _isChecked = NO;
+        self.isChecked = NO;
         // 设置checkobx的监听事件
         [self addTarget:self action:@selector(checkboxClick) forControlEvents:UIControlEventTouchUpInside];
-        return self;
     }
-    return nil;
+    return self;
 }
 
 /**

@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TKLocationManager : CLLocationManager
 + (TKLocationManager *)shareInstance;
+- (CLLocationDistance)getDistanceWithLatitude:(double)latitude longitude:(double)longitude;
 
 @end
 

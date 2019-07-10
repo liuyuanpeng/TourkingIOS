@@ -290,7 +290,7 @@ static const NSCalendarUnit SRDateComponentFlags = NSCalendarUnitMonth | NSCalen
     NSDateFormatter* formatter = nil;
     
     if (component == self.monthComponent) {
-        label.text = [NSString stringWithFormat:@"%ld月", row%12 + 1];
+        label.text = [NSString stringWithFormat:@"%ld月", (long)(row%12 + 1)];
         label.textAlignment = NSTextAlignmentCenter;
         formatter = self.monthFormatter;
     } else {

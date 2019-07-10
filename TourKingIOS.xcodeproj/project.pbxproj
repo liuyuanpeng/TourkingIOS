@@ -46,6 +46,7 @@
 		916C44C422B3F4D400C6772A /* OnlineOrders.m in Sources */ = {isa = PBXBuildFile; fileRef = 916C44C322B3F4D400C6772A /* OnlineOrders.m */; };
 		916C44C722B65F8000C6772A /* Income.m in Sources */ = {isa = PBXBuildFile; fileRef = 916C44C622B65F8000C6772A /* Income.m */; };
 		9180887422BCFA6B0061F30E /* i_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 9180887322BCFA6B0061F30E /* i_back.png */; };
+		91A138AC22CF8393007849CB /* reminder.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 91A138AB22CF8393007849CB /* reminder.mp3 */; };
 		91C9ED4C22BA16F400630C0C /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91C9ED4B22BA16F400630C0C /* Photos.framework */; };
 		91C9ED4F22BA49D800630C0C /* TKLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C9ED4E22BA49D800630C0C /* TKLocationManager.m */; };
 		91C9ED5822BAA08500630C0C /* AlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 91C9ED5722BAA08500630C0C /* AlertView.m */; };
@@ -209,6 +210,7 @@
 		916C44C522B65F8000C6772A /* Income.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Income.h; sourceTree = "<group>"; };
 		916C44C622B65F8000C6772A /* Income.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Income.m; sourceTree = "<group>"; };
 		9180887322BCFA6B0061F30E /* i_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = i_back.png; sourceTree = "<group>"; };
+		91A138AB22CF8393007849CB /* reminder.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = reminder.mp3; sourceTree = "<group>"; };
 		91C9ED4B22BA16F400630C0C /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		91C9ED4D22BA49D800630C0C /* TKLocationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKLocationManager.h; sourceTree = "<group>"; };
 		91C9ED4E22BA49D800630C0C /* TKLocationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKLocationManager.m; sourceTree = "<group>"; };
@@ -535,6 +537,7 @@
 		91E3BDC422AB9DFF00527582 /* res */ = {
 			isa = PBXGroup;
 			children = (
+				91A138AB22CF8393007849CB /* reminder.mp3 */,
 				9180887622BFC1870061F30E /* icons */,
 				91E3BD1622A9058700527582 /* images */,
 			);
@@ -703,6 +706,7 @@
 				91E3BDD322ABB45000527582 /* Float_click@3x.png in Resources */,
 				9180887422BCFA6B0061F30E /* i_back.png in Resources */,
 				91E3BD7622A9076F00527582 /* Line@3x.png in Resources */,
+				91A138AC22CF8393007849CB /* reminder.mp3 in Resources */,
 				91E3BD7222A9076F00527582 /* Star1@3x.png in Resources */,
 				91E3BDAA22A9076F00527582 /* 确认送达@2x.png in Resources */,
 				91E3BD8322A9076F00527582 /* Bitmap@3x.png in Resources */,
@@ -1007,18 +1011,20 @@
 			baseConfigurationReference = 69D4289B419570FFE89C3DEB /* Pods-TourKingIOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LRH7M5ZE2D;
+				DEVELOPMENT_TEAM = MS33TNSTA6;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TourKingIOS/TKPrefixHeader.pch;
 				INFOPLIST_FILE = TourKingIOS/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tourking.TourKingIOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tourking.driver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1028,18 +1034,21 @@
 			baseConfigurationReference = 51A3A31CD9C9FCC301F858FB /* Pods-TourKingIOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LRH7M5ZE2D;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = MS33TNSTA6;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TourKingIOS/TKPrefixHeader.pch;
 				INFOPLIST_FILE = TourKingIOS/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tourking.TourKingIOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tourking.driver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

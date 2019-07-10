@@ -29,6 +29,7 @@
 @implementation IncomeVC
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self.tableView.mj_header beginRefreshing];
 }
 
@@ -128,6 +129,7 @@
     self.monthPickerView.frame = CGRectMake(0, 40, rScreen.size.width, self.pickerView.frame.size.height - 30);
     NSDate *currentDate = [NSDate date];
     self.monthPickerView.date = currentDate;
+    self.selectedDate = currentDate;
     NSCalendar* calendar = [NSCalendar currentCalendar];
     NSDateComponents* components = [calendar components:NSCalendarUnitYear fromDate:currentDate];
     self.monthPickerView.minimumYear = 2018;
@@ -187,7 +189,7 @@
     IncomeTableViewCell *cell = [IncomeTableViewCell cellWithTableView:tableView];
     NSInteger rowIndex = indexPath.row;
     NSDictionary *data = [[Income shareInstance].orders objectAtIndex:rowIndex];
-    NSTimeInterval settledTimeInterval = [[data objectForKey:@"settled_time"] doubleValue]/1000;
+    NSTimeInterval settledTimeInterval = [[data objectForKey:@"done_time"] doubleValue]/1000;
     NSDate *settledTime = [NSDate dateWithTimeIntervalSince1970:settledTimeInterval];
     [cell setName:[data objectForKey:@"username"] phone:[data objectForKey:@"mobile"] time:[settledTime formattedDateWithFormat:@"yyyy-MM-dd HH:mm:ss"] income:[NSString stringWithFormat:@"+%.2f", [[data objectForKey:@"price"] doubleValue]]];
     return cell;

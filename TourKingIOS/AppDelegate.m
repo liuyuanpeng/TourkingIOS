@@ -30,7 +30,7 @@
     [self.window makeKeyAndVisible];
     
     // 高德地图key
-    [AMapServices sharedServices].apiKey =@"a78fd67b4e7a4dc81ab88b75c70c084a";
+    [AMapServices sharedServices].apiKey =@"aac824a5f853939bc7c4c284807ca232" ;
     
     self.window.rootViewController = [[TKViewController alloc] init];
     if (isLogin) {

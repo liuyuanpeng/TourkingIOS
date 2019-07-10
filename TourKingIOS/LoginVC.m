@@ -16,6 +16,7 @@
 #import "User.h"
 
 NSString *TEST_ACCOUNT = @"18559643214";
+NSString *TEST_CAPTCHA = @"9462";
 
 @interface LoginVC ()
 {
@@ -59,9 +60,7 @@ NSString *TEST_ACCOUNT = @"18559643214";
     _sendCaptcha.frame = CGRectMake(rScreen.size.width - 175, lineSep1.frame.origin.y + 25, 150, 30);
     _sendCaptcha.layer.cornerRadius = 15.0;
     _sendCaptcha.layer.borderWidth = 1.0;
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGColorRef colorref = CGColorCreate(colorSpace,(CGFloat[]){ 0x2F/255.0, 0xB4/255.0, 0x6E/255.0, 1 });
-    _sendCaptcha.layer.borderColor = colorref;
+    _sendCaptcha.layer.borderColor = [UIColor colorWithRed:0x2f/255.0 green:0xb4/255.0 blue:0x6e/255.0 alpha:1.0].CGColor;
     [_sendCaptcha.layer setMasksToBounds:YES];
     [_sendCaptcha addTarget:self action:@selector(getCAPTCHA:) forControlEvents:UIControlEventTouchUpInside];
     [_sendCaptcha.titleLabel setFont:[UIFont systemFontOfSize:18]];
@@ -149,17 +148,17 @@ NSString *TEST_ACCOUNT = @"18559643214";
         return;
     }
     
-    if ([_phone.text compare:TEST_ACCOUNT] == NSOrderedSame) {
+    if ([_phone.text compare:TEST_ACCOUNT] == NSOrderedSame && [_captcha.text compare: TEST_CAPTCHA] == NSOrderedSame) {
         //测试账号登录
         [[User shareInstance] setData:
          @{
            @"user": @{
-                   @"id":@"47244988445097984",@"name": @"lyp",
+                   @"id":@"50151145122824192",@"name": @"lyp",
                    @"avatar":@"http://www.kingtrip.vip/travel_file/20190620154404.png",
                    @"mobile": @"18559643214"
                    },
            @"token_session": @{
-                   @"token": @"b2ec4eafcb4949ac912a45e10a61599f"
+                   @"token": @"29568aaf84d64576b16cdf8c45190d4d"
                    }
            }];
         // 登录成功后退出登录窗口
