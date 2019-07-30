@@ -47,7 +47,14 @@
         _missionTitle.text = @"进行中任务";
         _missionTitle.textColor = [UIColor colorWithRed:0x2b/255.0 green:0xb3/255.0 blue:0x6c/255.0 alpha:1.0];
         [self setRightBtnTitle:@"确认送达"];
-    } else {
+    } else if ([status rangeOfString:@"CANCEL"].location != NSNotFound) {
+        _missionTitle.text = @"已取消";
+        _missionTitle.textColor = [UIColor grayColor];
+        [_right removeFromSuperview];
+        [_rightEx removeFromSuperview];
+        [_mapBtn removeFromSuperview];
+    }
+    else {
         _missionTitle.text = @"未指派任务";
         [_mapBtn setHidden:YES];
         [self setRightBtnTitle:@"我要接单"];
@@ -59,6 +66,8 @@
     
     _startPlace.text = [data objectForKey:@"start_place"];
     _endPlace.text = [data objectForKey:@"target_place"];
+    [_startPlace sizeToFit];
+    [_endPlace sizeToFit];
     _airNO.text = [NSString stringWithFormat:@"航班号: %@", [data objectForKey:@"air_no"]];
     _price.text = [NSString stringWithFormat:@"一口价: %.2f", [[data objectForKey:@"price"] doubleValue]];
     
@@ -96,26 +105,27 @@
         [startPlaceImg setImage:[UIImage imageNamed:@"Oval 1"]];
         [self addSubview:startPlaceImg];
         
-        _startPlace = [[UILabel alloc] initWithFrame:CGRectMake(30, 60, self.frame.size.width - 75, 13)];
+        _startPlace = [[UILabel alloc] initWithFrame:CGRectMake(30, 60, self.frame.size.width - 75, 32)];
         [_startPlace setFont:[UIFont systemFontOfSize:13]];
         _startPlace.text = @"djfasdlj的案件发垃圾发开发家具就阿拉斯加发加";
+        [_startPlace setNumberOfLines:0];
         [self addSubview:_startPlace];
         
         UIImageView *endPlaceImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 93, 7, 7)];
         [endPlaceImg setImage:[UIImage imageNamed:@"Oval 2"]];
         [self addSubview:endPlaceImg];
         
-        _endPlace = [[UILabel alloc] initWithFrame:CGRectMake(30, 90, self.frame.size.width - 75, 13)];
+        _endPlace = [[UILabel alloc] initWithFrame:CGRectMake(30, 90, self.frame.size.width - 75, 32)];
         [_endPlace setFont:[UIFont systemFontOfSize:13]];
         _endPlace.text = @"djfasdlj的案件发垃圾发开发家具就阿拉斯加发加";
+        [_endPlace setNumberOfLines:0];
         [self addSubview:_endPlace];
         
-        
-        UIImageView *airImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 122, 10, 10)];
+        UIImageView *airImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 127, 10, 10)];
         [airImg setImage:[UIImage imageNamed:@"航班号"]];
         [self addSubview:airImg];
         
-        _airNO = [[UILabel alloc] initWithFrame:CGRectMake(30, 120, self.frame.size.width - 115, 13)];
+        _airNO = [[UILabel alloc] initWithFrame:CGRectMake(30, 125, self.frame.size.width - 115, 13)];
         [_airNO setFont:[UIFont systemFontOfSize:13]];
         _airNO.text = @"djfasdlj的案件发垃圾发开发家具就阿拉斯加发加";
         [self addSubview:_airNO];
