@@ -21,11 +21,22 @@
 @end
 
 @implementation MissionVC
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.modalPresentationStyle = UIModalPresentationFullScreen;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.navigationItem.title = @"未指派任务";
     
+    [self.navigationController.navigationBar setBackgroundColor:[UIColor colorWithRed:0x3F/255.0 green:0xB7/255.0 blue:0x62/255.0 alpha:1.0]];
+
     [self.view setBackgroundColor:[UIColor colorWithWhite:244/255.0 alpha:1.0]];
     
     CGRect rNav = self.navigationController.navigationBar.frame;

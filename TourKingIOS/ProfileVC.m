@@ -27,6 +27,15 @@
 @end
 
 @implementation ProfileVC
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.modalPresentationStyle = UIModalPresentationFullScreen;
+    }
+    return self;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
@@ -78,6 +87,9 @@
     [super viewDidLoad];
     
     self.navigationItem.title = @"个人中心";
+    
+    [self.navigationController.navigationBar setBackgroundColor:[UIColor colorWithRed:0x3F/255.0 green:0xB7/255.0 blue:0x62/255.0 alpha:1.0]];
+
     [self.view setBackgroundColor:[UIColor colorWithWhite:244/255.0 alpha:1.0]];
     
     CGRect rScreen = [[UIScreen mainScreen] bounds];
@@ -238,6 +250,7 @@
     } else {
         [imagePicker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
     }
+    imagePicker.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 

@@ -29,6 +29,15 @@ NSString *TEST_CAPTCHA = @"9462";
 @end
 
 @implementation LoginVC
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.modalPresentationStyle = UIModalPresentationFullScreen;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     

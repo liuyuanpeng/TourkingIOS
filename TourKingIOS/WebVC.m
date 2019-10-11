@@ -14,6 +14,7 @@
 - (instancetype) initWithURL:(NSString *)url title:(NSString *)title {
     self = [super init];
     if (self) {
+        self.modalPresentationStyle = UIModalPresentationFullScreen;
         NSURLRequest *request=[NSURLRequest requestWithURL:[NSURL URLWithString:url]];
         
         

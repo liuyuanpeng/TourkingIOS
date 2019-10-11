@@ -37,7 +37,13 @@
 @end
 
 @implementation AMapVC
-
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.modalPresentationStyle = UIModalPresentationFullScreen;
+    }
+    return self;
+}
 - (void)onChangeOrder:(id)sender {
     // 申请改派
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"确定要申请改派该订单吗？" preferredStyle:UIAlertControllerStyleAlert];
