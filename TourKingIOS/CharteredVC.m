@@ -1,29 +1,26 @@
 //
-//  HomeVC.m
+//  CharteredVC.m
 //  TourKingIOS
 //
-//  Created by liuyuanpeng on 2019/6/8.
+//  Created by liuyuanpeng on 2019/10/18.
 //  Copyright © 2019 default. All rights reserved.
 //
 
-#import "HomeVC.h"
+#import "CharteredVC.h"
 #import "MissionTableViewCell.h"
+#import "OnlineOrders.h"
 #import <MJRefresh.h>
-#import "User.h"
-#import "AcceptedOrders.h"
-#import "NowOrders.h"
 
-@interface HomeVC ()<UITableViewDelegate, UITableViewDataSource>
+@interface CharteredVC ()<UITableViewDelegate, UITableViewDataSource>
 {
     UITextField *_phone;
     UITextField *_captcha;
     UIButton *_sendCaptcha;
     UIButton *_login;
 }
-
 @end
 
-@implementation HomeVC
+@implementation CharteredVC
 
 - (instancetype)init {
     self = [super init];
@@ -35,8 +32,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"首页";
+    
+    self.navigationItem.title = @"包车";
+    
     [self.navigationController.navigationBar setBackgroundColor:[UIColor colorWithRed:0x3F/255.0 green:0xB7/255.0 blue:0x62/255.0 alpha:1.0]];
+
     [self.view setBackgroundColor:[UIColor colorWithWhite:244/255.0 alpha:1.0]];
     
     CGRect rNav = self.navigationController.navigationBar.frame;
@@ -52,62 +52,46 @@
     [self.tableView setSeparatorColor:[UIColor clearColor]];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-//    self.tableView.showsVerticalScrollIndicator = NO;
+    //    self.tableView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.tableView];
     
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(refreshData)];
 }
 
+
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [super viewWillAppear:animated];
-    UIButton *rightBtn = (UIButton *)self.navigationItem.rightBarButtonItem.customView;
-    if ([NowOrders shareInstance].isListening) {
-        [rightBtn setTitle:@"关闭抢单" forState:UIControlStateNormal];
-    } else {
-        [rightBtn setTitle:@"开启抢单" forState:UIControlStateNormal];
-    }
-    __weak UITableView *tableView = self.tableView;
-    [[User shareInstance] getDriverInfo:^(BOOL ok) {
-        if (ok){
-            [tableView.mj_header beginRefreshing];
-        }
-    }];
+    [self.tableView.mj_header beginRefreshing];
 }
 
 - (void)refreshData {
+    
     __weak UITableView *tableView = self.tableView;
-    [[AcceptedOrders shareInstance] getList:^(BOOL ok) {
+
+    [[OnlineOrders shareInstance] getList:^(BOOL ok) {
         if (ok) {
             [tableView reloadData];
         }
-        [self.tableView.mj_header endRefreshing];
+        [tableView.mj_header endRefreshing];
     }];
 }
 
 
 #pragma mark - UITableView Delegate Implementation
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSInteger rowIndex = indexPath.row;
-    NSDictionary *rowData = [AcceptedOrders shareInstance].orders[rowIndex];
-    NSString *scene = [rowData objectForKey:@"scene"];
-    if ([scene compare:@"DAY_PRIVATE"] == NSOrderedSame || [scene compare:@"ROAD_PRIVATE"] == NSOrderedSame) {
-        return 190.0;
-    }
-    return 250.0;
+    return 190.0;
 }
 
 #pragma mark - UITableView Datasource Impletation
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [AcceptedOrders shareInstance].orders == nil ? 0 : [AcceptedOrders shareInstance].orders.count;
+    return [OnlineOrders shareInstance].charteredOrders == nil ? 0 : [OnlineOrders shareInstance].charteredOrders.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    MissionTableViewCell *cell = [MissionTableViewCell cellWithTableView:tableView viewController:self chartered: YES];
     NSInteger rowIndex = indexPath.row;
-    NSDictionary *rowData = [AcceptedOrders shareInstance].orders[rowIndex];
-    NSString *scene = [rowData objectForKey:@"scene"];
-    MissionTableViewCell *cell = [MissionTableViewCell cellWithTableView:tableView viewController:self chartered:[scene compare:@"DAY_PRIVATE"] == NSOrderedSame || [scene compare:@"ROAD_PRIVATE"] == NSOrderedSame];
+    NSDictionary *rowData = [OnlineOrders shareInstance].charteredOrders[rowIndex];
     [cell setData:rowData];
     return cell;
 }

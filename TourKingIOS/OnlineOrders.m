@@ -26,12 +26,20 @@
         return;
     }
     __weak __typeof(self)weakSelf = self;
-    [AFNRequestManager requestAFURL:@"/travel/order/driver/task_list" httpMethod:METHOD_POST params:@{@"driver_user_id":[User shareInstance].id} data:@{@"page":@0,@"size":@30,@"sort_data_list":@[@{@"direction":@"ASC", @"property":@"startTime"}]} succeed:^(NSDictionary *ret) {
+    [AFNRequestManager requestAFURL:@"/travel/order/driver/task_list_test" httpMethod:METHOD_POST params:@{@"driver_user_id":[User shareInstance].id} data:@{@"page":@0,@"size":@30,@"sort_data_list":@[@{@"direction":@"ASC", @"property":@"startTime"}]} succeed:^(NSDictionary *ret) {
         if (ret == nil) {
             loadingOK(NO);
             return;
         }
-        weakSelf.orders = [NSArray arrayWithArray:[[ret objectForKey:@"data"] objectForKey:@"data_list"]];
+        NSArray* result = [NSArray arrayWithArray:[[ret objectForKey:@"data"] objectForKey:@"data_list"]];
+        weakSelf.orders = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+            NSString *scene = [evaluatedObject objectForKey:@"scene"];
+            return [scene compare:@"JIEJI"] == NSOrderedSame || [scene compare:@"SONGJI"] == NSOrderedSame || [scene compare:@"ORDER_SCENE"] == NSOrderedSame;
+        }]];
+        weakSelf.charteredOrders = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+            NSString *scene = [evaluatedObject objectForKey:@"scene"];
+            return [scene compare:@"DAY_PRIVATE"] == NSOrderedSame || [scene compare:@"ROAD_PRIVATE"] == NSOrderedSame;
+        }]];
         loadingOK(YES);
     } failure:^(NSError *error) {
         loadingOK(NO);

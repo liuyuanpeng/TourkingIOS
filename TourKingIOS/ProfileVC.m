@@ -100,7 +100,7 @@
     
     CGRect rcTop = self.navigationController.navigationBar.frame;
     
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, rcTop.origin.y + rcTop.size.height, rScreen.size.width, rScreen.size.height - rcTop.origin.y - rcTop.size.height)];
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, rcTop.origin.y + rcTop.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height, rScreen.size.width, rScreen.size.height - rcTop.origin.y - rcTop.size.height)];
     [self.view addSubview:scrollView];
     
     UIView *avatarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, rScreen.size.width, 140)];

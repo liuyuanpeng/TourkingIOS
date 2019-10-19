@@ -12,8 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MissionTableViewCell : UITableViewCell
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView viewController:(UIViewController *)viewControlelr;
++ (instancetype)cellWithTableView:(UITableView *)tableView viewController:(UIViewController *)viewControlelr chartered:(BOOL)bChartered;
 - (void)setData:(NSDictionary *)data;
+@property (nonatomic, assign) BOOL bChartered;
 @end
 
 

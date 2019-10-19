@@ -8,21 +8,27 @@
 
 #import "MissionTableViewCell.h"
 #import "MissionView.h"
+#import "CharteredView.h"
 
 @interface MissionTableViewCell ()
 {
     MissionView *_missionView;
+    CharteredView *_charteredView;
 }
 @end
 
 @implementation MissionTableViewCell
 
-
-+ (instancetype)cellWithTableView:(UITableView *)tableView viewController:(nonnull UIViewController *)viewControlelr {
++ (instancetype)cellWithTableView:(UITableView *)tableView viewController:(nonnull UIViewController *)viewControlelr chartered:(BOOL)bChartered{
     static NSString *cellIdentifier = @"mission_view_cell";
-    MissionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    // 该动态高度cell的reuse有问题，不再使用reuse
+    MissionTableViewCell *cell = nil;
+    [cell prepareForReuse];
     if (cell == nil) {
-        cell = [[MissionTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier viewController: viewControlelr];
+        cell.bChartered = bChartered;
+        MissionTableViewCell *viewCell = [MissionTableViewCell alloc];
+        viewCell.bChartered = bChartered;
+        cell = [viewCell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier viewController: viewControlelr];
     }
     return cell;
 }
@@ -34,15 +40,25 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.backgroundColor = [UIColor clearColor];
         
-        _missionView = [[MissionView alloc] init];
-        _missionView.viewcontroller = viewController;
-        [self.contentView addSubview:_missionView];
+        if (_bChartered) {
+            _charteredView = [[CharteredView alloc] init];
+            _charteredView.viewcontroller = viewController;
+            [self.contentView addSubview:_charteredView];
+        } else {
+            _missionView = [[MissionView alloc] init];
+            _missionView.viewcontroller = viewController;
+            [self.contentView addSubview:_missionView];
+        }
     }
     return self;
 }
 
 - (void)setData:(NSDictionary *)data {
-    [_missionView setData: data];
+    if (self.bChartered) {
+        [_charteredView setData:data];
+    } else {
+        [_missionView setData: data];
+    }
 }
 
 - (void)awakeFromNib {

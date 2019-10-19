@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSArray *orders;
 
+@property (nonatomic, strong) NSArray *charteredOrders;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -20,7 +20,11 @@
 @implementation HistoryView
 - (void)setData:(NSDictionary *)data {
     self.startPlace.text = [data objectForKey:@"start_place"];
-    self.endPlace.text = [data objectForKey:@"target_place"];
+    if ([[data objectForKey:@"target_place"] isEqual:[NSNull null]]) {
+        self.endPlace.text = @"";
+    } else {
+        self.endPlace.text = [data objectForKey:@"target_place"];
+    }
     self.airNO.text = [NSString stringWithFormat:@"航班号: %@", [data objectForKey:@"air_no"]];
     self.startTime.text = [[NSDate dateWithTimeIntervalSince1970:[[data objectForKey:@"execute_time"] doubleValue]/1000] formattedDateWithFormat:@"上车时间: MM月dd日 HH:mm"];
     self.price.text = [NSString stringWithFormat:@"一口价: %.2f",[[data objectForKey:@"price"] doubleValue]];

@@ -16,5 +16,6 @@ target 'TourKingIOS' do
   pod 'SRMModalViewController', '~> 0.0'
   pod 'DateTools', '~> 2.0'
   pod 'MJRefresh', '3.2'
+  pod 'LCBannerView', '~> 2.1'
 end
 

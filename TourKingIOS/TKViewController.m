@@ -8,6 +8,7 @@
 
 #import "TKViewController.h"
 #import "HomeVC.h"
+#import "CharteredVC.h"
 #import "MissionVC.h"
 #import "ProfileVC.h"
 #import <SRMModalViewController.h>
@@ -37,6 +38,7 @@
     
     _homeVC = [[HomeVC alloc] init];
     MissionVC *missionVC = [[MissionVC alloc] init];
+    CharteredVC *charteredVC = [[CharteredVC alloc] init];
     ProfileVC *profileVC = [[ProfileVC alloc] init];
     
     NSDictionary *textAttribute = @{NSForegroundColorAttributeName: [UIColor colorWithRed:0xAD / 255.0 green:0xAD / 255.0 blue:0xAD / 255.0 alpha:1]};
@@ -75,6 +77,16 @@
     [missionNav.navigationBar setShadowImage:[[UIImage alloc] init]];
     [missionNav.navigationBar setTitleTextAttributes:titleTextAttribute];
     
+    UINavigationController *charteredNav = [[UINavigationController alloc] initWithRootViewController:charteredVC];
+    charteredNav.tabBarItem.title = @"包车";
+    [charteredNav.tabBarItem setImage:[[UIImage imageNamed:@"包车"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    [charteredNav.tabBarItem setSelectedImage:[[UIImage imageNamed:@"包车_click"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    [charteredNav.tabBarItem setTitleTextAttributes:textSelectedAttribute forState:UIControlStateSelected];
+    [charteredNav.tabBarItem setTitleTextAttributes:textAttribute forState:UIControlStateNormal];
+    [charteredNav.navigationBar setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+    [charteredNav.navigationBar setShadowImage:[[UIImage alloc] init]];
+    [charteredNav.navigationBar setTitleTextAttributes:titleTextAttribute];
+    
     UINavigationController *profileNav = [[UINavigationController alloc] initWithRootViewController:profileVC];
     profileNav.tabBarItem.title = @"我的";
     [profileNav.tabBarItem setImage:[[UIImage imageNamed:@"我的"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
@@ -84,7 +96,7 @@
     [profileNav.navigationBar setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
     [profileNav.navigationBar setShadowImage:[[UIImage alloc] init]];
     [profileNav.navigationBar setTitleTextAttributes:titleTextAttribute];
-    self.viewControllers = @[homeNav, missionNav, profileNav];
+    self.viewControllers = @[homeNav, missionNav, charteredNav, profileNav];
     [SRMModalViewController sharedInstance].delegate = self;
     [NowOrders shareInstance].delegate = self;
     

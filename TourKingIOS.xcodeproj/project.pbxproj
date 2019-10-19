@@ -13,6 +13,14 @@
 		911BC75722A4F52500F79A29 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 911BC75522A4F52500F79A29 /* LaunchScreen.storyboard */; };
 		911BC75A22A4F52500F79A29 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 911BC75922A4F52500F79A29 /* main.m */; };
 		911BC76422A4F9CA00F79A29 /* AFNRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 911BC76322A4F9CA00F79A29 /* AFNRequestManager.m */; };
+		913782F123597AF2005E074F /* 包车_click@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 913782ED23597AF1005E074F /* 包车_click@3x.png */; };
+		913782F223597AF2005E074F /* 包车@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 913782EE23597AF1005E074F /* 包车@2x.png */; };
+		913782F323597AF2005E074F /* 包车@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 913782EF23597AF1005E074F /* 包车@3x.png */; };
+		913782F423597AF2005E074F /* 包车_click@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 913782F023597AF2005E074F /* 包车_click@2x.png */; };
+		913782F723597B62005E074F /* CharteredVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 913782F623597B62005E074F /* CharteredVC.m */; };
+		913782FA235A066D005E074F /* CharteredView.m in Sources */ = {isa = PBXBuildFile; fileRef = 913782F9235A066D005E074F /* CharteredView.m */; };
+		913782FD235A091E005E074F /* DetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 913782FC235A091E005E074F /* DetailVC.m */; };
+		91378300235A3D21005E074F /* RouteTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 913782FF235A3D21005E074F /* RouteTableViewCell.m */; };
 		916C446E22AF887900C6772A /* Circle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 916C446C22AF887800C6772A /* Circle@3x.png */; };
 		916C446F22AF887900C6772A /* Circle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 916C446D22AF887800C6772A /* Circle@2x.png */; };
 		916C447222AFA36C00C6772A /* MissionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 916C447122AFA36C00C6772A /* MissionTableViewCell.m */; };
@@ -160,6 +168,18 @@
 		911BC75922A4F52500F79A29 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		911BC76222A4F9CA00F79A29 /* AFNRequestManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFNRequestManager.h; sourceTree = "<group>"; };
 		911BC76322A4F9CA00F79A29 /* AFNRequestManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFNRequestManager.m; sourceTree = "<group>"; };
+		913782ED23597AF1005E074F /* 包车_click@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "包车_click@3x.png"; sourceTree = "<group>"; };
+		913782EE23597AF1005E074F /* 包车@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "包车@2x.png"; sourceTree = "<group>"; };
+		913782EF23597AF1005E074F /* 包车@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "包车@3x.png"; sourceTree = "<group>"; };
+		913782F023597AF2005E074F /* 包车_click@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "包车_click@2x.png"; sourceTree = "<group>"; };
+		913782F523597B62005E074F /* CharteredVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharteredVC.h; sourceTree = "<group>"; };
+		913782F623597B62005E074F /* CharteredVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CharteredVC.m; sourceTree = "<group>"; };
+		913782F8235A066D005E074F /* CharteredView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharteredView.h; sourceTree = "<group>"; };
+		913782F9235A066D005E074F /* CharteredView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CharteredView.m; sourceTree = "<group>"; };
+		913782FB235A091E005E074F /* DetailVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailVC.h; sourceTree = "<group>"; };
+		913782FC235A091E005E074F /* DetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailVC.m; sourceTree = "<group>"; };
+		913782FE235A3D21005E074F /* RouteTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RouteTableViewCell.h; sourceTree = "<group>"; };
+		913782FF235A3D21005E074F /* RouteTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RouteTableViewCell.m; sourceTree = "<group>"; };
 		916C446C22AF887800C6772A /* Circle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Circle@3x.png"; sourceTree = "<group>"; };
 		916C446D22AF887800C6772A /* Circle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Circle@2x.png"; sourceTree = "<group>"; };
 		916C447022AFA36C00C6772A /* MissionTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MissionTableViewCell.h; sourceTree = "<group>"; };
@@ -400,6 +420,10 @@
 				916C448322B124EF00C6772A /* default_navi_browse_ver_normal@2x.png */,
 				916C448822B124F000C6772A /* default_navi_browse_ver_normal@3x.png */,
 				916C448122B124EF00C6772A /* default_navi_browse_ver_selected@2x.png */,
+				913782F023597AF2005E074F /* 包车_click@2x.png */,
+				913782ED23597AF1005E074F /* 包车_click@3x.png */,
+				913782EE23597AF1005E074F /* 包车@2x.png */,
+				913782EF23597AF1005E074F /* 包车@3x.png */,
 				916C448522B124EF00C6772A /* default_navi_browse_ver_selected@3x.png */,
 				916C448222B124EF00C6772A /* default_navi_footer_icon_close.png */,
 				916C448722B124F000C6772A /* default_navi_traffic_close_normal@2x.png */,
@@ -530,6 +554,10 @@
 				916C449A22B2437600C6772A /* HistoryVC.m */,
 				916C44A222B2511900C6772A /* IncomeVC.h */,
 				916C44A322B2511900C6772A /* IncomeVC.m */,
+				913782F523597B62005E074F /* CharteredVC.h */,
+				913782F623597B62005E074F /* CharteredVC.m */,
+				913782FB235A091E005E074F /* DetailVC.h */,
+				913782FC235A091E005E074F /* DetailVC.m */,
 			);
 			name = VC;
 			sourceTree = "<group>";
@@ -571,6 +599,10 @@
 				91C9ED5722BAA08500630C0C /* AlertView.m */,
 				91C9ED5C22BCD20000630C0C /* UIButton+timeInterval.h */,
 				91C9ED5D22BCD20000630C0C /* UIButton+timeInterval.m */,
+				913782F8235A066D005E074F /* CharteredView.h */,
+				913782F9235A066D005E074F /* CharteredView.m */,
+				913782FE235A3D21005E074F /* RouteTableViewCell.h */,
+				913782FF235A3D21005E074F /* RouteTableViewCell.m */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -689,6 +721,7 @@
 				91E3BD9722A9076F00527582 /* Rectangle@3x.png in Resources */,
 				916C448B22B124F000C6772A /* default_navi_footer_icon_close.png in Resources */,
 				916C449122B124F000C6772A /* default_navi_browse_ver_normal@3x.png in Resources */,
+				913782F123597AF2005E074F /* 包车_click@3x.png in Resources */,
 				91E3BD8422A9076F00527582 /* 首页_click@2x.png in Resources */,
 				91E3BD7122A9076F00527582 /* Rectangle 2@3x.png in Resources */,
 				91E3BD9F22A9076F00527582 /* 确认送达@3x.png in Resources */,
@@ -707,6 +740,7 @@
 				9180887422BCFA6B0061F30E /* i_back.png in Resources */,
 				91E3BD7622A9076F00527582 /* Line@3x.png in Resources */,
 				91A138AC22CF8393007849CB /* reminder.mp3 in Resources */,
+				913782F223597AF2005E074F /* 包车@2x.png in Resources */,
 				91E3BD7222A9076F00527582 /* Star1@3x.png in Resources */,
 				91E3BDAA22A9076F00527582 /* 确认送达@2x.png in Resources */,
 				91E3BD8322A9076F00527582 /* Bitmap@3x.png in Resources */,
@@ -738,6 +772,7 @@
 				91E3BD7F22A9076F00527582 /* 订单号@3x.png in Resources */,
 				91E3BD6E22A9076F00527582 /* Group 6@2x.png in Resources */,
 				91E3BDA622A9076F00527582 /* Path@3x.png in Resources */,
+				913782F323597AF2005E074F /* 包车@3x.png in Resources */,
 				91E3BD6722A9076F00527582 /* 时间 @3x.png in Resources */,
 				91E3BD6F22A9076F00527582 /* Oval 3@3x.png in Resources */,
 				916C447B22B0E02300C6772A /* star_@2x.png in Resources */,
@@ -767,6 +802,7 @@
 				91E3BD9922A9076F00527582 /* 订单号@2x.png in Resources */,
 				91E3BD7D22A9076F00527582 /* phone @2x.png in Resources */,
 				91E3BD6A22A9076F00527582 /* Group 7@3x.png in Resources */,
+				913782F423597AF2005E074F /* 包车_click@2x.png in Resources */,
 				91E3BD7B22A9076F00527582 /* Rectangle 2@2x.png in Resources */,
 				91E3BD9C22A9076F00527582 /* Group 3@3x.png in Resources */,
 				916C448922B124F000C6772A /* default_navi_traffic_open_normal@2x.png in Resources */,
@@ -850,8 +886,11 @@
 				916C449E22B243A200C6772A /* HistoryTableViewCell.m in Sources */,
 				916C447222AFA36C00C6772A /* MissionTableViewCell.m in Sources */,
 				911BC75A22A4F52500F79A29 /* main.m in Sources */,
+				91378300235A3D21005E074F /* RouteTableViewCell.m in Sources */,
 				916C447522AFA3F600C6772A /* MissionView.m in Sources */,
+				913782FA235A066D005E074F /* CharteredView.m in Sources */,
 				91C9ED5B22BB7EE800630C0C /* DBManager.m in Sources */,
+				913782FD235A091E005E074F /* DetailVC.m in Sources */,
 				916C44AD22B2BA6800C6772A /* SRMonthPicker.m in Sources */,
 				916C44B522B3B94A00C6772A /* User.m in Sources */,
 				916C44BE22B3F46500C6772A /* HistoryOrders.m in Sources */,
@@ -869,6 +908,7 @@
 				91C9ED5E22BCD20000630C0C /* UIButton+timeInterval.m in Sources */,
 				916C447822B0C42600C6772A /* OrderView.m in Sources */,
 				916C44A722B251FF00C6772A /* IncomeTableViewCell.m in Sources */,
+				913782F723597B62005E074F /* CharteredVC.m in Sources */,
 				91E3BDDF22AEF4D100527582 /* UIButton+countDown.m in Sources */,
 				91C9ED5822BAA08500630C0C /* AlertView.m in Sources */,
 				916C447F22B0F5B400C6772A /* AMapVC.m in Sources */,

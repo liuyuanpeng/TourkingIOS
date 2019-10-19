@@ -38,7 +38,11 @@
         _data = [NSDictionary dictionaryWithDictionary:order];
         _orderId.text = [order objectForKey:@"id"];
         _startPlace.text = [order objectForKey:@"start_place"];
-        _endPlace.text = [order objectForKey:@"target_place"];
+        if ([[order objectForKey:@"target_place"] isEqual:[NSNull null]]) {
+            _endPlace.text = @"";
+        } else {
+            _endPlace.text = [order objectForKey:@"target_place"];
+        }
         _startTime.text = [[NSDate dateWithTimeIntervalSince1970:[[order objectForKey:@"start_time"] doubleValue]/1000] formattedDateWithFormat:@"时间: yyyy-MM-dd HH:mm"];
         double distance = [[TKLocationManager shareInstance] getDistanceWithLatitude:[[order objectForKey:@"start_latitude"]doubleValue] longitude:[[order objectForKey:@"start_longitude"]doubleValue]];
         _kilo.text = [NSString stringWithFormat:@"距离您%.2fkm", distance/1000.0];

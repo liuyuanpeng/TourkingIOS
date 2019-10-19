@@ -89,7 +89,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MissionTableViewCell *cell = [MissionTableViewCell cellWithTableView:tableView viewController:self];
+    MissionTableViewCell *cell = [MissionTableViewCell cellWithTableView:tableView viewController:self chartered:NO];
     NSInteger rowIndex = indexPath.row;
     NSDictionary *rowData = [OnlineOrders shareInstance].orders[rowIndex];
     [cell setData:rowData];
