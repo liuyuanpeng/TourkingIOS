@@ -85,16 +85,15 @@
     }];
 }
 
-
 #pragma mark - UITableView Delegate Implementation
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger rowIndex = indexPath.row;
     NSDictionary *rowData = [AcceptedOrders shareInstance].orders[rowIndex];
     NSString *scene = [rowData objectForKey:@"scene"];
     if ([scene compare:@"DAY_PRIVATE"] == NSOrderedSame || [scene compare:@"ROAD_PRIVATE"] == NSOrderedSame) {
-        return 190.0;
+        return 220.0;
     }
-    return 250.0;
+    return 330.0;
 }
 
 #pragma mark - UITableView Datasource Impletation

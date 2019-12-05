@@ -41,8 +41,13 @@
         
         [self.view addSubview: navigationBar];
         
-        //创建UIBarButton 可根据需要选择适合自己的样式        
-        UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"i_back"] style:UIBarButtonItemStylePlain target:self action:@selector(navigationBackButton:)];
+        //创建UIBarButton 可根据需要选择适合自己的样式
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0,0,25,25)];
+        [button setBackgroundImage:[UIImage imageNamed:@"i_back.png"] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(navigationBackButton:) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:button];
+
         
         //设置barbutton
         

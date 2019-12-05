@@ -24,6 +24,7 @@
     UILabel *_startPlace;
     UILabel *_startTime;
     UILabel *_price;
+    UILabel *_order;
     UIButton *_right;
     UIButton *_rightEx;
     UIButton *_detailBtn;
@@ -71,6 +72,8 @@
     _price.text = [NSString stringWithFormat:@"一口价: %.2f", [[data objectForKey:@"price"] doubleValue]];
     
     _charteredId = [NSString stringWithFormat:@"%@", [data objectForKey:@"private_consume_id"]];
+    
+    [_order setText:_charteredId];
 }
 
 - (instancetype) init {
@@ -78,7 +81,7 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         CGRect rScreen = [[UIScreen mainScreen] bounds];
-        self.frame = CGRectMake(15, 10, rScreen.size.width - 30, 180);
+        self.frame = CGRectMake(15, 10, rScreen.size.width - 30, 210);
         [self.layer setCornerRadius:10.0f];
         [self.layer setMasksToBounds:YES];
         
@@ -130,11 +133,20 @@
         _price.text = @"";
         [self addSubview:_price];
         
-        UIView *lineSep2 = [[UIView alloc] initWithFrame:CGRectMake(15, 145, self.frame.size.width - 30, 1)];
+        UIImageView *orderImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 152, 10, 10)];
+        [orderImg setImage:[UIImage imageNamed:@"order"]];
+        [self addSubview:orderImg];
+
+        _order = [[UILabel alloc] initWithFrame:CGRectMake(30, 150, self.frame.size.width - 115, 13)];
+        [_order setFont:[UIFont systemFontOfSize:13]];
+        _order.text = @"";
+        [self addSubview:_order];
+        
+        UIView *lineSep2 = [[UIView alloc] initWithFrame:CGRectMake(15, 175, self.frame.size.width - 30, 1)];
         [lineSep2 setBackgroundColor:[UIColor colorWithWhite:244/255.0 alpha:1.0]];
         [self addSubview:lineSep2];
         
-        UIView *lineSep3 = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width/2, 145, 1, 45)];
+        UIView *lineSep3 = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width/2, 175, 1, 45)];
         [lineSep3 setBackgroundColor:[UIColor colorWithWhite:244/255.0 alpha:1.0]];
         [self addSubview:lineSep3];
         
@@ -148,26 +160,26 @@
         [_detailBtn addTarget:self action:@selector(onShowDetail:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_detailBtn];
         
-        UIButton *phone = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width/4 - 50, 155, 20, 20)];
+        UIButton *phone = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width/4 - 50, 185, 20, 20)];
         [phone setBackgroundImage:[UIImage imageNamed:@"联系客户"] forState:UIControlStateNormal];
         [phone addTarget:self action:@selector(onPhone:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:phone];
         
         UIButton *phoneEx = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        phoneEx.frame = CGRectMake(self.frame.size.width/4 - 20, 155, 80, 20);
+        phoneEx.frame = CGRectMake(self.frame.size.width/4 - 20, 185, 80, 20);
         [phoneEx addTarget:self action:@selector(onPhone:) forControlEvents:UIControlEventTouchUpInside];
         [phoneEx setTitle:@"联系乘客" forState:UIControlStateNormal];
         [phoneEx.titleLabel setFont:[UIFont systemFontOfSize:18]];
         [phoneEx setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [self addSubview:phoneEx];
         
-        _right = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width*0.75 - 50, 155, 20, 20)];
+        _right = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width*0.75 - 50, 185, 20, 20)];
         [_right setBackgroundImage:[UIImage imageNamed:@"接单"] forState:UIControlStateNormal];
         [_right addTarget:self action:@selector(onRight:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_right];
         
         _rightEx = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _rightEx.frame = CGRectMake(self.frame.size.width*0.75 - 20, 155, 80, 20);
+        _rightEx.frame = CGRectMake(self.frame.size.width*0.75 - 20, 185, 80, 20);
         [_rightEx addTarget:self action:@selector(onRight:) forControlEvents:UIControlEventTouchUpInside];
         [_rightEx setTitle:@"我要接单" forState:UIControlStateNormal];
         [_rightEx.titleLabel setFont:[UIFont systemFontOfSize:18]];
@@ -181,7 +193,8 @@
 - (void)onShowDetail: (id)sender {
     if (_charteredId) {
         DetailVC *detailVC = [[DetailVC alloc] init];
-        detailVC.detailID = [NSString stringWithString:_charteredId];
+        detailVC.data = [NSMutableDictionary dictionaryWithDictionary:self.data];
+        NSLog(@"%@", detailVC.data);
         [self.viewcontroller presentViewController:detailVC animated:YES completion:nil];
     }
 }

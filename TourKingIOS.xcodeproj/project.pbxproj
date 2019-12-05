@@ -153,6 +153,11 @@
 		91E3BDE922AEFEA600527582 /* ProfileVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 91E3BDE722AEFEA600527582 /* ProfileVC.m */; };
 		91E3BDEC22AF06C800527582 /* TKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91E3BDEB22AF06C800527582 /* TKViewController.m */; };
 		91E3BDF722AF339D00527582 /* WebVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 91E3BDF522AF339D00527582 /* WebVC.m */; };
+		91FA21E62394089400F6BC77 /* UILabel+align.m in Sources */ = {isa = PBXBuildFile; fileRef = 91FA21E52394089400F6BC77 /* UILabel+align.m */; };
+		91FA21E923940FBC00F6BC77 /* backup@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91FA21E723940FBC00F6BC77 /* backup@3x.png */; };
+		91FA21EA23940FBC00F6BC77 /* backup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91FA21E823940FBC00F6BC77 /* backup@2x.png */; };
+		91FA21ED239411DD00F6BC77 /* order@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91FA21EB239411DD00F6BC77 /* order@2x.png */; };
+		91FA21EE239411DD00F6BC77 /* order@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91FA21EC239411DD00F6BC77 /* order@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -343,6 +348,12 @@
 		91E3BDEB22AF06C800527582 /* TKViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKViewController.m; sourceTree = "<group>"; };
 		91E3BDF322AF339D00527582 /* WebVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebVC.h; sourceTree = "<group>"; };
 		91E3BDF522AF339D00527582 /* WebVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebVC.m; sourceTree = "<group>"; };
+		91FA21E42394089400F6BC77 /* UILabel+align.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+align.h"; sourceTree = "<group>"; };
+		91FA21E52394089400F6BC77 /* UILabel+align.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILabel+align.m"; sourceTree = "<group>"; };
+		91FA21E723940FBC00F6BC77 /* backup@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "backup@3x.png"; sourceTree = "<group>"; };
+		91FA21E823940FBC00F6BC77 /* backup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "backup@2x.png"; sourceTree = "<group>"; };
+		91FA21EB239411DD00F6BC77 /* order@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order@2x.png"; sourceTree = "<group>"; };
+		91FA21EC239411DD00F6BC77 /* order@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "order@3x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -418,6 +429,10 @@
 			children = (
 				9180887322BCFA6B0061F30E /* i_back.png */,
 				916C448322B124EF00C6772A /* default_navi_browse_ver_normal@2x.png */,
+				91FA21EB239411DD00F6BC77 /* order@2x.png */,
+				91FA21EC239411DD00F6BC77 /* order@3x.png */,
+				91FA21E823940FBC00F6BC77 /* backup@2x.png */,
+				91FA21E723940FBC00F6BC77 /* backup@3x.png */,
 				916C448822B124F000C6772A /* default_navi_browse_ver_normal@3x.png */,
 				916C448122B124EF00C6772A /* default_navi_browse_ver_selected@2x.png */,
 				913782F023597AF2005E074F /* 包车_click@2x.png */,
@@ -603,6 +618,8 @@
 				913782F9235A066D005E074F /* CharteredView.m */,
 				913782FE235A3D21005E074F /* RouteTableViewCell.h */,
 				913782FF235A3D21005E074F /* RouteTableViewCell.m */,
+				91FA21E42394089400F6BC77 /* UILabel+align.h */,
+				91FA21E52394089400F6BC77 /* UILabel+align.m */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -707,9 +724,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				91E3BD6C22A9076F00527582 /* 任务 _click@2x.png in Resources */,
+				91FA21E923940FBC00F6BC77 /* backup@3x.png in Resources */,
 				91E3BD8622A9076F00527582 /* 我的收入@2x.png in Resources */,
 				911BC75722A4F52500F79A29 /* LaunchScreen.storyboard in Resources */,
 				91E3BDD222ABB45000527582 /* Float@2x.png in Resources */,
+				91FA21EE239411DD00F6BC77 /* order@3x.png in Resources */,
 				91E3BD8922A9076F00527582 /* 价格@2x.png in Resources */,
 				91E3BDA722A9076F00527582 /* 联系客户@2x.png in Resources */,
 				91E3BDAB22A9076F00527582 /* 改派@2x.png in Resources */,
@@ -734,6 +753,7 @@
 				91E3BDB622A9076F00527582 /* Star2@3x.png in Resources */,
 				916C447C22B0E02300C6772A /* star_@3x.png in Resources */,
 				91E3BDAC22A9076F00527582 /* 联系客户@3x.png in Resources */,
+				91FA21ED239411DD00F6BC77 /* order@2x.png in Resources */,
 				91E3BDD422ABB45000527582 /* Float_click@2x.png in Resources */,
 				91E3BD9B22A9076F00527582 /* 任务 _click@3x.png in Resources */,
 				91E3BDD322ABB45000527582 /* Float_click@3x.png in Resources */,
@@ -767,6 +787,7 @@
 				91E3BDA522A9076F00527582 /* Group 8@3x.png in Resources */,
 				91E3BD7A22A9076F00527582 /* 时间 @2x.png in Resources */,
 				91E3BDB422A9076F00527582 /* 我的_click@3x.png in Resources */,
+				91FA21EA23940FBC00F6BC77 /* backup@2x.png in Resources */,
 				91E3BD9122A9076F00527582 /* 历史订单@3x.png in Resources */,
 				916C448F22B124F000C6772A /* default_navi_traffic_close_normal@3x.png in Resources */,
 				91E3BD7F22A9076F00527582 /* 订单号@3x.png in Resources */,
@@ -884,6 +905,7 @@
 				916C449B22B2437600C6772A /* HistoryVC.m in Sources */,
 				911BC74922A4F52400F79A29 /* AppDelegate.m in Sources */,
 				916C449E22B243A200C6772A /* HistoryTableViewCell.m in Sources */,
+				91FA21E62394089400F6BC77 /* UILabel+align.m in Sources */,
 				916C447222AFA36C00C6772A /* MissionTableViewCell.m in Sources */,
 				911BC75A22A4F52500F79A29 /* main.m in Sources */,
 				91378300235A3D21005E074F /* RouteTableViewCell.m in Sources */,
@@ -1053,6 +1075,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MS33TNSTA6;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TourKingIOS/TKPrefixHeader.pch;
@@ -1062,6 +1085,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tourking.driver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1076,6 +1100,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = MS33TNSTA6;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1086,6 +1111,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tourking.driver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

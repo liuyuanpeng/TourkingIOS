@@ -249,6 +249,9 @@
 }
 
 + (void)showError:(NSString *)error {
+    if ([error isEqual:[NSNull null]]) {
+        return;
+    }
     UIApplication *ap = [UIApplication sharedApplication];
     [ap.keyWindow makeToast:error duration:2.0 position:CSToastPositionCenter];
 }

@@ -15,6 +15,7 @@
 #import "MissionVC.h"
 #import "Utils.h"
 #import "AlertView.h"
+#import "UILabel+align.h"
 #import <SRMModalViewController.h>
 
 @interface MissionView ()
@@ -26,6 +27,8 @@
     UILabel *_airNO;
     UILabel *_startTime;
     UILabel *_price;
+    UILabel *_backup;
+    UILabel *_order;
     UIButton *_right;
     UIButton *_rightEx;
     UIButton *_mapBtn;
@@ -70,11 +73,11 @@
     } else {
         _endPlace.text = [data objectForKey:@"target_place"];
     }
-    [_startPlace sizeToFit];
-    [_endPlace sizeToFit];
+
     _airNO.text = [NSString stringWithFormat:@"航班号: %@", [data objectForKey:@"air_no"]];
     _price.text = [NSString stringWithFormat:@"一口价: %.2f", [[data objectForKey:@"price"] doubleValue]];
-    
+    _backup.text = [NSString stringWithFormat:@"备注: %@", [data objectForKey:@"remark"]];
+    _order.text = [NSString stringWithFormat:@"订单号: %@", [data objectForKey:@"id"]];
 }
 
 - (instancetype) init {
@@ -82,7 +85,7 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         CGRect rScreen = [[UIScreen mainScreen] bounds];
-        self.frame = CGRectMake(15, 10, rScreen.size.width - 30, 240);
+        self.frame = CGRectMake(15, 10, rScreen.size.width - 30, 320);
         [self.layer setCornerRadius:10.0f];
         [self.layer setMasksToBounds:YES];
         
@@ -105,18 +108,17 @@
         [lineSep1 setBackgroundColor:[UIColor colorWithWhite:244/255.0 alpha:1.0]];
         [self addSubview:lineSep1];
         
-        UIImageView *startPlaceImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 63, 7, 7)];
+        UIImageView *startPlaceImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 72, 7, 7)];
         [startPlaceImg setImage:[UIImage imageNamed:@"Oval 1"]];
         [self addSubview:startPlaceImg];
         
         _startPlace = [[UILabel alloc] initWithFrame:CGRectMake(30, 60, self.frame.size.width - 75, 32)];
         [_startPlace setFont:[UIFont systemFontOfSize:13]];
-        _startPlace.text = @"djfasdlj的案件发垃圾发开发家具就阿拉斯加发加";
+        _startPlace.text = @"";
         [_startPlace setNumberOfLines:2];
-        [_startPlace sizeToFit];
         [self addSubview:_startPlace];
         
-        UIImageView *endPlaceImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 93, 7, 7)];
+        UIImageView *endPlaceImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 102, 7, 7)];
         [endPlaceImg setImage:[UIImage imageNamed:@"Oval 2"]];
         [self addSubview:endPlaceImg];
         
@@ -124,7 +126,6 @@
         [_endPlace setFont:[UIFont systemFontOfSize:13]];
         _endPlace.text = @"";
         [_endPlace setNumberOfLines:2];
-        [_endPlace sizeToFit];
         [self addSubview:_endPlace];
         
         UIImageView *airImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 127, 10, 10)];
@@ -151,14 +152,32 @@
         
         _price = [[UILabel alloc] initWithFrame:CGRectMake(30, 180, self.frame.size.width - 115, 13)];
         [_price setFont:[UIFont systemFontOfSize:13]];
-        _price.text = @"djfasdlj的案件发垃圾发开发家具就阿拉斯加发加";
+        _price.text = @"";
         [self addSubview:_price];
         
-        UIView *lineSep2 = [[UIView alloc] initWithFrame:CGRectMake(15, 205, self.frame.size.width - 30, 1)];
+        UIImageView *backupImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 212, 10, 10)];
+        [backupImg setImage:[UIImage imageNamed:@"backup"]];
+        [self addSubview:backupImg];
+        
+        _backup = [[UILabel alloc] initWithFrame:CGRectMake(30, 210, self.frame.size.width - 115, 13)];
+        [_backup setFont:[UIFont systemFontOfSize:13]];
+        _backup.text = @"";
+        [self addSubview:_backup];
+
+        UIImageView *orderImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 242, 10, 10)];
+        [orderImg setImage:[UIImage imageNamed:@"order"]];
+        [self addSubview:orderImg];
+        
+        _order = [[UILabel alloc] initWithFrame:CGRectMake(30, 240, self.frame.size.width - 115, 13)];
+        [_order setFont:[UIFont systemFontOfSize:13]];
+        _order.text = @"";
+        [self addSubview:_order];
+
+        UIView *lineSep2 = [[UIView alloc] initWithFrame:CGRectMake(15, 275, self.frame.size.width - 30, 1)];
         [lineSep2 setBackgroundColor:[UIColor colorWithWhite:244/255.0 alpha:1.0]];
         [self addSubview:lineSep2];
         
-        UIView *lineSep3 = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width/2, 205, 1, 45)];
+        UIView *lineSep3 = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width/2, 275, 1, 45)];
         [lineSep3 setBackgroundColor:[UIColor colorWithWhite:244/255.0 alpha:1.0]];
         [self addSubview:lineSep3];
         
@@ -167,26 +186,26 @@
         [_mapBtn addTarget:self action:@selector(onMap:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_mapBtn];
         
-        UIButton *phone = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width/4 - 50, 215, 20, 20)];
+        UIButton *phone = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width/4 - 50, 285, 20, 20)];
         [phone setBackgroundImage:[UIImage imageNamed:@"联系客户"] forState:UIControlStateNormal];
         [phone addTarget:self action:@selector(onPhone:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:phone];
         
         UIButton *phoneEx = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        phoneEx.frame = CGRectMake(self.frame.size.width/4 - 20, 215, 80, 20);
+        phoneEx.frame = CGRectMake(self.frame.size.width/4 - 20, 285, 80, 20);
         [phoneEx addTarget:self action:@selector(onPhone:) forControlEvents:UIControlEventTouchUpInside];
         [phoneEx setTitle:@"联系乘客" forState:UIControlStateNormal];
         [phoneEx.titleLabel setFont:[UIFont systemFontOfSize:18]];
         [phoneEx setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [self addSubview:phoneEx];
         
-        _right = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width*0.75 - 50, 215, 20, 20)];
+        _right = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width*0.75 - 50, 285, 20, 20)];
         [_right setBackgroundImage:[UIImage imageNamed:@"接单"] forState:UIControlStateNormal];
         [_right addTarget:self action:@selector(onRight:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_right];
         
         _rightEx = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _rightEx.frame = CGRectMake(self.frame.size.width*0.75 - 20, 215, 80, 20);
+        _rightEx.frame = CGRectMake(self.frame.size.width*0.75 - 20, 285, 80, 20);
         [_rightEx addTarget:self action:@selector(onRight:) forControlEvents:UIControlEventTouchUpInside];
         [_rightEx setTitle:@"我要接单" forState:UIControlStateNormal];
         [_rightEx.titleLabel setFont:[UIFont systemFontOfSize:18]];

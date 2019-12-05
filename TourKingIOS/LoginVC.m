@@ -65,8 +65,8 @@ NSString *TEST_CAPTCHA = @"9462";
     [_captcha addTarget:self action:@selector(textFieldChanged:) forControlEvents:UIControlEventEditingChanged];
     [self.view addSubview:_captcha];
     
-    _sendCaptcha = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _sendCaptcha.frame = CGRectMake(rScreen.size.width - 175, lineSep1.frame.origin.y + 25, 150, 30);
+    _sendCaptcha = [UIButton buttonWithType:UIButtonTypeCustom];
+    _sendCaptcha.frame = CGRectMake(rScreen.size.width - 185, lineSep1.frame.origin.y + 25, 160, 30);
     _sendCaptcha.layer.cornerRadius = 15.0;
     _sendCaptcha.layer.borderWidth = 1.0;
     _sendCaptcha.layer.borderColor = [UIColor colorWithRed:0x2f/255.0 green:0xb4/255.0 blue:0x6e/255.0 alpha:1.0].CGColor;

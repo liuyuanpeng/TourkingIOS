@@ -10,11 +10,16 @@
 #import "AFNRequestManager.h"
 #import <LCBannerView.h>
 #import "RouteTableViewCell.h"
+#import "AlertView.h"
+#import <SRMModalViewController.h>
+#import "User.h"
+
 
 @interface DetailVC () <UITableViewDelegate, UITableViewDataSource>
-@property (nonatomic, strong) NSDictionary *data;
 @property (nonatomic, strong) NSMutableArray *roads;
 @property (nonatomic, strong) UINavigationItem *navigationBarTitle;
+@property (nonatomic, strong) NSDictionary *detailData;
+@property (nonatomic, strong) UIButton *bottomBtn;
 @end
 
 @implementation DetailVC
@@ -64,21 +69,24 @@
     [scrollView setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:scrollView];
     
-    NSDictionary *privateConsume = [_data objectForKey:@"private_consume"];
+    NSDictionary *privateConsume = [_detailData objectForKey:@"private_consume"];
     
     NSString *images = [privateConsume objectForKey:@"images"];
-    NSArray *URLs = [images length] > 0 ? [images componentsSeparatedByString:@","] :@[];
+    BOOL hasBanner = [images length] > 0;
+    NSArray *URLs = hasBanner ? [images componentsSeparatedByString:@","] :@[];
     
-    LCBannerView *bannerView = [LCBannerView bannerViewWithFrame:CGRectMake(0,0, rScreen.size.width, rScreen.size.width/2.0)
-                                                        delegate:nil
-                                                       imageURLs:URLs
-                                            placeholderImageName:nil
-                                                    timeInterval:2.0f
-                                   currentPageIndicatorTintColor:[UIColor redColor]
-                                          pageIndicatorTintColor:[UIColor whiteColor]];
-    [scrollView addSubview:bannerView];
+    if (hasBanner) {
+        LCBannerView *bannerView = [LCBannerView bannerViewWithFrame:CGRectMake(0,0, rScreen.size.width, rScreen.size.width/2.0)
+                                                            delegate:nil
+                                                           imageURLs:URLs
+                                                placeholderImageName:nil
+                                                        timeInterval:2.0f
+                                       currentPageIndicatorTintColor:[UIColor redColor]
+                                              pageIndicatorTintColor:[UIColor whiteColor]];
+        [scrollView addSubview:bannerView];
+    }
     
-    UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(20, rScreen.size.width/2, rScreen.size.width - 40, 60.0)];
+    UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(20, hasBanner ? rScreen.size.width/2 : 0, rScreen.size.width - 40, 60.0)];
     [titleLab setText:[NSString stringWithFormat:@"%@", [privateConsume objectForKey:@"name"]]];
     [titleLab setFont:[UIFont boldSystemFontOfSize:25]];
     [titleLab setNumberOfLines:0];
@@ -93,7 +101,86 @@
     [scrollView addSubview:self.tableView];
     
     scrollView.contentSize = CGSizeMake(rScreen.size.width,self.tableView.frame.origin.y + self.tableView.frame.size.height);
+
     
+    if(!self.data) {
+        return;
+    }
+    
+    NSString *orderStatus = [NSString stringWithFormat:@"%@", [self.data objectForKey:@"order_status"]];
+    if ([orderStatus compare:@"ACCEPTED"] == NSOrderedSame || [orderStatus compare:@"ON_THE_WAY"] == NSOrderedSame) {
+        
+        scrollView.frame = CGRectMake(0, rect.size.height + topHeight, rScreen.size.width, rScreen.size.height - rect.size.height - topHeight - 50 );
+        self.tableView.frame = CGRectMake(20, titleLab.frame.origin.y + titleLab.frame.size.height + 10, rScreen.size.width - 40,rScreen.size.height - rect.size.height - topHeight - 50);
+
+        UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, rScreen.size.height - 50, rScreen.size.width, 50)];
+        bottomView.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:bottomView];
+        
+        _bottomBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        _bottomBtn.layer.cornerRadius = 15;
+        [_bottomBtn.layer setMasksToBounds:YES];
+        _bottomBtn.frame = CGRectMake(10, 5, rScreen.size.width - 20, 40);
+        _bottomBtn.backgroundColor = [UIColor colorWithRed:57/255.0 green:180/255.0 blue:105/255.0 alpha:1.0];
+        [_bottomBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_bottomBtn.titleLabel setFont:[UIFont systemFontOfSize:20.0]];
+        [_bottomBtn setTitle:@"结束行程" forState:UIControlStateNormal];
+        if ([orderStatus compare:@"ACCEPTED"] == NSOrderedSame) {
+            [_bottomBtn setTitle:@"到达约定点" forState:UIControlStateNormal];
+        }
+        [_bottomBtn addTarget:self action:@selector(onBottomBtn:) forControlEvents:UIControlEventTouchUpInside];
+        [bottomView addSubview:_bottomBtn];
+        
+    }
+}
+
+- (void)onBottomBtn: (id)sender {
+    if (self.data == nil || [User shareInstance] == nil) {
+        return;
+    }
+    NSString *orderStatus = [self.data objectForKey:@"order_status"];
+    __weak __typeof(self)weakSelf = self;
+    if ([orderStatus compare:@"ACCEPTED"] == NSOrderedSame) {
+        //到达约定点
+        if ([User shareInstance].bBusy) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"操作不允许" message:@"您现在有进行中的任务，请先完成任务" preferredStyle:UIAlertControllerStyleAlert];
+            __weak UIAlertController *weakAlertController = alertController;
+            [alertController addAction:[UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [weakAlertController dismissViewControllerAnimated:NO completion:nil];
+            }]];
+            [self presentViewController:alertController animated:NO completion:nil];
+            return;
+        }
+
+        [AFNRequestManager requestAFURL:@"/travel/driver/execute_order" httpMethod:METHOD_POST params:@{@"order_id": [self.data objectForKey:@"id"], @"driver_user_id": [User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
+            if (ret == nil) {
+                return;
+            }
+            if (weakSelf.data) {
+                [weakSelf.data setObject:@"ON_THE_WAY" forKey:@"order_status"];
+                [User shareInstance].bBusy = YES;
+                [self.bottomBtn setTitle:@"结束行程" forState:UIControlStateNormal];
+            }
+        } failure:nil];
+        
+    } else if([orderStatus compare:@"ON_THE_WAY"] == NSOrderedSame) {
+        //结束行程    __weak __typeof(self)weakSelf = self;
+    AlertView *alertView = [AlertView initWithCancelBlock:^{
+        NSLog(@"cancel");
+    } okBlock:^{
+        __weak __typeof(self)weakweakSelf = weakSelf;
+        [AFNRequestManager requestAFURL:@"/travel/driver/done_order" httpMethod:METHOD_POST params:@{@"order_id": [NSString stringWithFormat:@"%@", [self.data objectForKey:@"id"]], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
+            if (ret == nil) {
+                return;
+            }
+            [weakweakSelf dismissViewControllerAnimated:NO completion:nil];
+            
+        } failure:nil];
+
+    }];
+    [SRMModalViewController sharedInstance].enableTapOutsideToDismiss = NO;
+    [[SRMModalViewController sharedInstance] showView:alertView];
+    }
 }
 
 - (void)navigationBackButton: (id)sender {
@@ -101,8 +188,8 @@
 }
 
 - (void)createRoads {
-    if (_data) {
-        NSArray *roads = [[NSMutableArray alloc] initWithArray:[_data objectForKey:@"roads"]];
+    if (_detailData) {
+        NSArray *roads = [[NSMutableArray alloc] initWithArray:[_detailData objectForKey:@"roads"]];
         [self.roads removeAllObjects];
         CGRect rScreen = [[UIScreen mainScreen] bounds];
         for (NSInteger i = 0; i < roads.count; i++) {
@@ -139,19 +226,18 @@
 }
 
 - (void)getDetail {
-    if (!self.detailID) {
+    if (!self.data) {
         return;
     }
     
     __weak __typeof(self)weakSelf = self;
-    [AFNRequestManager requestAFURL:@"/travel/private_consume/get" httpMethod:METHOD_GET params:@{@"private_consume_id": self.detailID} data:nil succeed:^(NSDictionary *ret) {
+    [AFNRequestManager requestAFURL:@"/travel/private_consume/get" httpMethod:METHOD_GET params:@{@"private_consume_id": [self.data objectForKey:@"private_consume_id"]} data:nil succeed:^(NSDictionary *ret) {
         if (ret == nil)
         {
             return;
         }
-        weakSelf.data = [ret objectForKey:@"data"];
+        weakSelf.detailData = [ret objectForKey:@"data"];
         [weakSelf createRoads];
-        NSLog(@"%@", weakSelf.data);
         [weakSelf buildViews];
     } failure:^(NSError *error) {
         NSLog(@"%@", error);

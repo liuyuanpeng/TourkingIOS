@@ -74,16 +74,19 @@
     NSString *images = [data objectForKey:@"images"];
     if (images && ![images isEqual:[NSNull null]]) {
         NSArray* URLs = [images componentsSeparatedByString:@","];
-        LCBannerView *bannerView = [LCBannerView bannerViewWithFrame:CGRectMake(70, title.frame.size.height + 25,contentWidth - 70, (contentWidth - 70)/2.0)
-                             delegate:nil
-                            imageURLs:URLs
-                 placeholderImageName:nil
-                         timeInterval:10.0f
-        currentPageIndicatorTintColor:[UIColor redColor]
-               pageIndicatorTintColor:[UIColor whiteColor]];
-        [self.contentView addSubview:bannerView];
+        BOOL hasBanner = [images length] > 0;
+        if (hasBanner) {
+            LCBannerView *bannerView = [LCBannerView bannerViewWithFrame:CGRectMake(70, title.frame.size.height + 25,contentWidth - 70, (contentWidth - 70)/2.0)
+                                 delegate:nil
+                                imageURLs:URLs
+                     placeholderImageName:nil
+                             timeInterval:10.0f
+            currentPageIndicatorTintColor:[UIColor redColor]
+                   pageIndicatorTintColor:[UIColor whiteColor]];
+            [self.contentView addSubview:bannerView];
+        }
         
-        desc.frame = CGRectMake(70,  title.frame.size.height + 25 + (contentWidth - 70)/2.0, contentWidth - 70, 0);
+        desc.frame = CGRectMake(70,  title.frame.size.height + 25 + (hasBanner ?  (contentWidth - 70)/2.0 : 0), contentWidth - 70, 0);
     }
     
     [desc setFont:[UIFont systemFontOfSize:20]];

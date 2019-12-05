@@ -79,7 +79,7 @@
 
 #pragma mark - UITableView Delegate Implementation
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 190.0;
+    return 220.0;
 }
 
 #pragma mark - UITableView Datasource Impletation

@@ -33,21 +33,23 @@
         }
         weakSelf.orders = [NSArray arrayWithArray:[ret objectForKey:@"data"]];
         [weakSelf checkBusy];
-        [AFNRequestManager requestAFURL:@"/travel/driver/driver_cancel_page" httpMethod:METHOD_POST params:@{@"driver_user_id": [User shareInstance].id} data:@[] succeed:^(NSDictionary *cancelRet) {
-            if (cancelRet == nil) {
-                loadingOK(NO);
-                return;
-            }
-            NSMutableArray *arr = [NSMutableArray arrayWithArray:weakSelf.orders];
-            NSArray *cacelArray = [cancelRet objectForKey:@"data"];
-            for (NSArray *a in cacelArray) {
-                [arr addObject:a];
-            }
-            weakSelf.orders = [NSArray arrayWithArray:arr];
-            loadingOK(YES);
-        } failure:^(NSError *error) {
-            loadingOK(NO);
-        }];
+        
+        loadingOK(YES);
+//        [AFNRequestManager requestAFURL:@"/travel/driver/driver_cancel_page" httpMethod:METHOD_POST params:@{@"driver_user_id": [User shareInstance].id} data:@[] succeed:^(NSDictionary *cancelRet) {
+//            if (cancelRet == nil) {
+//                loadingOK(NO);
+//                return;
+//            }
+//            NSMutableArray *arr = [NSMutableArray arrayWithArray:weakSelf.orders];
+//            NSArray *cacelArray = [cancelRet objectForKey:@"data"];
+//            for (NSArray *a in cacelArray) {
+//                [arr addObject:a];
+//            }
+//            weakSelf.orders = [NSArray arrayWithArray:arr];
+//            loadingOK(YES);
+//        } failure:^(NSError *error) {
+//            loadingOK(NO);
+//        }];
     } failure:^(NSError *error) {
         loadingOK(NO);
     }];

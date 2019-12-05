@@ -11,8 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DetailVC : UIViewController
-@property(nonatomic, strong) NSString* detailID;
 @property (nonatomic, strong) UITableView* tableView;
+@property (nonatomic, strong) NSMutableDictionary *data;
 @end
 
 NS_ASSUME_NONNULL_END

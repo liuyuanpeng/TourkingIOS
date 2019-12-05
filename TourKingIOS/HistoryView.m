@@ -15,6 +15,7 @@
 @property (nonatomic, strong) UILabel *airNO;
 @property (nonatomic, strong) UILabel *startTime;
 @property (nonatomic, strong) UILabel *price;
+@property (nonatomic, strong) UILabel *order;
 @end
 
 @implementation HistoryView
@@ -28,13 +29,15 @@
     self.airNO.text = [NSString stringWithFormat:@"航班号: %@", [data objectForKey:@"air_no"]];
     self.startTime.text = [[NSDate dateWithTimeIntervalSince1970:[[data objectForKey:@"execute_time"] doubleValue]/1000] formattedDateWithFormat:@"上车时间: MM月dd日 HH:mm"];
     self.price.text = [NSString stringWithFormat:@"一口价: %.2f",[[data objectForKey:@"price"] doubleValue]];
+    
+    self.order.text = [NSString stringWithFormat:@"订单号: %@", [data objectForKey:@"id"]];
 }
 - (instancetype)init {
     self = [super init];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         CGRect rScreen = [[UIScreen mainScreen] bounds];
-        self.frame = CGRectMake(15, 10, rScreen.size.width - 30, 165);
+        self.frame = CGRectMake(15, 10, rScreen.size.width - 30, 195);
         [self.layer setCornerRadius:10.0f];
         [self.layer setMasksToBounds:YES];
         
@@ -82,6 +85,16 @@
         [self.price setFont:[UIFont systemFontOfSize:15]];
         self.price.text = @"djfasdlj的案件发垃圾发开发家具就阿拉斯加发加";
         [self addSubview:self.price];
+
+        UIImageView *orderImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 167, 10, 10)];
+        [orderImg setImage:[UIImage imageNamed:@"order"]];
+        [self addSubview:orderImg];
+        
+        self.order = [[UILabel alloc] initWithFrame:CGRectMake(30, 165, self.frame.size.width - 45, 15)];
+        [self.order setFont:[UIFont systemFontOfSize:15]];
+        self.order.text = @"";
+        [self addSubview:self.order];
+
     }
     return self;
 }
