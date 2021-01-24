@@ -76,7 +76,11 @@
 
     _airNO.text = [NSString stringWithFormat:@"航班号: %@", [data objectForKey:@"air_no"]];
     _price.text = [NSString stringWithFormat:@"一口价: %.2f", [[data objectForKey:@"price"] doubleValue]];
-    _backup.text = [NSString stringWithFormat:@"备注: %@", [data objectForKey:@"remark"]];
+    if ([[data objectForKey:@"remark"] isEqual:[NSNull null]]) {
+        _backup.text = @"备注:";
+    } else {
+        _backup.text = [NSString stringWithFormat:@"备注: %@", [data objectForKey:@"remark"]];
+    }
     _order.text = [NSString stringWithFormat:@"订单号: %@", [data objectForKey:@"id"]];
 }
 
