@@ -6,29 +6,29 @@
 //  Copyright © 2019 default. All rights reserved.
 //
 
-#import "MissionTableViewCell.h"
-#import "MissionView.h"
-#import "CharteredView.h"
-#import "DayView.h"
+#import "MissionTableViewCellEx.h"
+#import "MissionViewEx.h"
+#import "CharteredViewEx.h"
+#import "DayViewEx.h"
 
-@interface MissionTableViewCell ()
+@interface MissionTableViewCellEx ()
 {
-    MissionView *_missionView;
-    CharteredView *_charteredView;
-    DayView *_dayView;
+    MissionViewEx *_missionView;
+    CharteredViewEx *_charteredView;
+    DayViewEx *_dayView;
 }
 @end
 
-@implementation MissionTableViewCell
+@implementation MissionTableViewCellEx
 
 + (instancetype)cellWithTableView:(UITableView *)tableView viewController:(nonnull UIViewController *)viewControlelr scene:(nonnull NSString *)scene{
     static NSString *cellIdentifier = @"mission_view_cell";
     // 该动态高度cell的reuse有问题，不再使用reuse
-    MissionTableViewCell *cell = nil;
+    MissionTableViewCellEx *cell = nil;
     [cell prepareForReuse];
     if (cell == nil) {
         cell.scene = scene;
-        MissionTableViewCell *viewCell = [MissionTableViewCell alloc];
+        MissionTableViewCellEx *viewCell = [MissionTableViewCellEx alloc];
         viewCell.scene = scene;
         cell = [viewCell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier viewController: viewControlelr];
     }
@@ -43,16 +43,16 @@
         self.backgroundColor = [UIColor clearColor];
         
         if ([self.scene compare:@"ROAD_PRIVATE"] == NSOrderedSame) {
-            _charteredView = [[CharteredView alloc] init];
+            _charteredView = [[CharteredViewEx alloc] init];
             _charteredView.viewcontroller = viewController;
             [self.contentView addSubview:_charteredView];
         } else if ([self.scene compare:@"DAY_PRIVATE"] == NSOrderedSame) {
-            _dayView = [[DayView alloc] init];
+            _dayView = [[DayViewEx alloc] init];
             _dayView.viewcontroller = viewController;
             [self.contentView addSubview:_dayView];
         }
         else {
-            _missionView = [[MissionView alloc] init];
+            _missionView = [[MissionViewEx alloc] init];
             _missionView.viewcontroller = viewController;
             [self.contentView addSubview:_missionView];
         }

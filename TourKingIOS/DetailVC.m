@@ -46,7 +46,7 @@
     _navigationBarTitle = [[UINavigationItem alloc] init];
     UILabel *customLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
     [customLab setTextColor:[UIColor whiteColor]];
-    [customLab setText:@"包车详情"];
+    [customLab setText:@"线路详情"];
     customLab.font = [UIFont systemFontOfSize:20];
     _navigationBarTitle.titleView = customLab;
     [navigationBar pushNavigationItem: _navigationBarTitle animated:YES];

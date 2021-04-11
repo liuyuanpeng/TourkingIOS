@@ -21,6 +21,12 @@
 		913782FA235A066D005E074F /* CharteredView.m in Sources */ = {isa = PBXBuildFile; fileRef = 913782F9235A066D005E074F /* CharteredView.m */; };
 		913782FD235A091E005E074F /* DetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 913782FC235A091E005E074F /* DetailVC.m */; };
 		91378300235A3D21005E074F /* RouteTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 913782FF235A3D21005E074F /* RouteTableViewCell.m */; };
+		9138206125C0EA3D00F76EBD /* CharteredViewEx.m in Sources */ = {isa = PBXBuildFile; fileRef = 9138206025C0EA3D00F76EBD /* CharteredViewEx.m */; };
+		9138206525C0EA8F00F76EBD /* MissionViewEx.m in Sources */ = {isa = PBXBuildFile; fileRef = 9138206425C0EA8F00F76EBD /* MissionViewEx.m */; };
+		9138206925C0EB5000F76EBD /* MissionTableViewCellEx.m in Sources */ = {isa = PBXBuildFile; fileRef = 9138206725C0EB5000F76EBD /* MissionTableViewCellEx.m */; };
+		9138206D25C0F25700F76EBD /* DayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9138206B25C0F25700F76EBD /* DayView.m */; };
+		9138207125C0F55500F76EBD /* DayViewEx.m in Sources */ = {isa = PBXBuildFile; fileRef = 9138206F25C0F55500F76EBD /* DayViewEx.m */; };
+		9138207525C0FFE200F76EBD /* DetailVCEx.m in Sources */ = {isa = PBXBuildFile; fileRef = 9138207325C0FFE200F76EBD /* DetailVCEx.m */; };
 		916C446E22AF887900C6772A /* Circle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 916C446C22AF887800C6772A /* Circle@3x.png */; };
 		916C446F22AF887900C6772A /* Circle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 916C446D22AF887800C6772A /* Circle@2x.png */; };
 		916C447222AFA36C00C6772A /* MissionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 916C447122AFA36C00C6772A /* MissionTableViewCell.m */; };
@@ -185,6 +191,18 @@
 		913782FC235A091E005E074F /* DetailVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailVC.m; sourceTree = "<group>"; };
 		913782FE235A3D21005E074F /* RouteTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RouteTableViewCell.h; sourceTree = "<group>"; };
 		913782FF235A3D21005E074F /* RouteTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RouteTableViewCell.m; sourceTree = "<group>"; };
+		9138205F25C0EA3D00F76EBD /* CharteredViewEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharteredViewEx.h; sourceTree = "<group>"; };
+		9138206025C0EA3D00F76EBD /* CharteredViewEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CharteredViewEx.m; sourceTree = "<group>"; };
+		9138206325C0EA8F00F76EBD /* MissionViewEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MissionViewEx.h; sourceTree = "<group>"; };
+		9138206425C0EA8F00F76EBD /* MissionViewEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MissionViewEx.m; sourceTree = "<group>"; };
+		9138206725C0EB5000F76EBD /* MissionTableViewCellEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MissionTableViewCellEx.m; sourceTree = "<group>"; };
+		9138206825C0EB5000F76EBD /* MissionTableViewCellEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MissionTableViewCellEx.h; sourceTree = "<group>"; };
+		9138206B25C0F25700F76EBD /* DayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayView.m; sourceTree = "<group>"; };
+		9138206C25C0F25700F76EBD /* DayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayView.h; sourceTree = "<group>"; };
+		9138206F25C0F55500F76EBD /* DayViewEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayViewEx.m; sourceTree = "<group>"; };
+		9138207025C0F55500F76EBD /* DayViewEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayViewEx.h; sourceTree = "<group>"; };
+		9138207325C0FFE200F76EBD /* DetailVCEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailVCEx.m; sourceTree = "<group>"; };
+		9138207425C0FFE200F76EBD /* DetailVCEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailVCEx.h; sourceTree = "<group>"; };
 		916C446C22AF887800C6772A /* Circle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Circle@3x.png"; sourceTree = "<group>"; };
 		916C446D22AF887800C6772A /* Circle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Circle@2x.png"; sourceTree = "<group>"; };
 		916C447022AFA36C00C6772A /* MissionTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MissionTableViewCell.h; sourceTree = "<group>"; };
@@ -417,13 +435,6 @@
 			path = TourKingIOS;
 			sourceTree = "<group>";
 		};
-		9180887622BFC1870061F30E /* icons */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = icons;
-			sourceTree = "<group>";
-		};
 		91E3BD1622A9058700527582 /* images */ = {
 			isa = PBXGroup;
 			children = (
@@ -573,6 +584,8 @@
 				913782F623597B62005E074F /* CharteredVC.m */,
 				913782FB235A091E005E074F /* DetailVC.h */,
 				913782FC235A091E005E074F /* DetailVC.m */,
+				9138207425C0FFE200F76EBD /* DetailVCEx.h */,
+				9138207325C0FFE200F76EBD /* DetailVCEx.m */,
 			);
 			name = VC;
 			sourceTree = "<group>";
@@ -581,7 +594,6 @@
 			isa = PBXGroup;
 			children = (
 				91A138AB22CF8393007849CB /* reminder.mp3 */,
-				9180887622BFC1870061F30E /* icons */,
 				91E3BD1622A9058700527582 /* images */,
 			);
 			name = res;
@@ -590,19 +602,29 @@
 		91E3BDC922ABAB6D00527582 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				9138205F25C0EA3D00F76EBD /* CharteredViewEx.h */,
+				9138206025C0EA3D00F76EBD /* CharteredViewEx.m */,
 				91E3BDCA22ABAB9000527582 /* UICheckBox.h */,
 				91E3BDCB22ABAB9000527582 /* UICheckBox.m */,
 				91E3BDDD22AEF4D100527582 /* UIButton+countDown.h */,
 				91E3BDDE22AEF4D100527582 /* UIButton+countDown.m */,
 				916C447022AFA36C00C6772A /* MissionTableViewCell.h */,
 				916C447122AFA36C00C6772A /* MissionTableViewCell.m */,
+				9138207025C0F55500F76EBD /* DayViewEx.h */,
+				9138206F25C0F55500F76EBD /* DayViewEx.m */,
 				916C447322AFA3F600C6772A /* MissionView.h */,
+				9138206325C0EA8F00F76EBD /* MissionViewEx.h */,
+				9138206425C0EA8F00F76EBD /* MissionViewEx.m */,
 				916C447422AFA3F600C6772A /* MissionView.m */,
 				916C447622B0C42600C6772A /* OrderView.h */,
 				916C447722B0C42600C6772A /* OrderView.m */,
 				916C449C22B243A200C6772A /* HistoryTableViewCell.h */,
 				916C449D22B243A200C6772A /* HistoryTableViewCell.m */,
+				9138206825C0EB5000F76EBD /* MissionTableViewCellEx.h */,
+				9138206725C0EB5000F76EBD /* MissionTableViewCellEx.m */,
 				916C449F22B243C900C6772A /* HistoryView.h */,
+				9138206C25C0F25700F76EBD /* DayView.h */,
+				9138206B25C0F25700F76EBD /* DayView.m */,
 				916C44A022B243C900C6772A /* HistoryView.m */,
 				916C44A522B251FF00C6772A /* IncomeTableViewCell.h */,
 				916C44A622B251FF00C6772A /* IncomeTableViewCell.m */,
@@ -687,7 +709,7 @@
 		911BC73C22A4F52400F79A29 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = default;
 				TargetAttributes = {
 					911BC74322A4F52400F79A29 = {
@@ -912,14 +934,17 @@
 				916C447522AFA3F600C6772A /* MissionView.m in Sources */,
 				913782FA235A066D005E074F /* CharteredView.m in Sources */,
 				91C9ED5B22BB7EE800630C0C /* DBManager.m in Sources */,
+				9138206125C0EA3D00F76EBD /* CharteredViewEx.m in Sources */,
 				913782FD235A091E005E074F /* DetailVC.m in Sources */,
 				916C44AD22B2BA6800C6772A /* SRMonthPicker.m in Sources */,
 				916C44B522B3B94A00C6772A /* User.m in Sources */,
 				916C44BE22B3F46500C6772A /* HistoryOrders.m in Sources */,
+				9138207525C0FFE200F76EBD /* DetailVCEx.m in Sources */,
 				916C44AA22B2711300C6772A /* MonthPickerView.m in Sources */,
 				91C9ED4F22BA49D800630C0C /* TKLocationManager.m in Sources */,
 				916C44BB22B3F3D200C6772A /* AcceptedOrders.m in Sources */,
 				916C44C122B3F4BF00C6772A /* NowOrders.m in Sources */,
+				9138206525C0EA8F00F76EBD /* MissionViewEx.m in Sources */,
 				91E3BDCC22ABAB9000527582 /* UICheckBox.m in Sources */,
 				916C44A122B243C900C6772A /* HistoryView.m in Sources */,
 				91E3BDE422AEFE5000527582 /* MissionVC.m in Sources */,
@@ -928,15 +953,18 @@
 				911BC76422A4F9CA00F79A29 /* AFNRequestManager.m in Sources */,
 				91E3BDE922AEFEA600527582 /* ProfileVC.m in Sources */,
 				91C9ED5E22BCD20000630C0C /* UIButton+timeInterval.m in Sources */,
+				9138206D25C0F25700F76EBD /* DayView.m in Sources */,
 				916C447822B0C42600C6772A /* OrderView.m in Sources */,
 				916C44A722B251FF00C6772A /* IncomeTableViewCell.m in Sources */,
 				913782F723597B62005E074F /* CharteredVC.m in Sources */,
 				91E3BDDF22AEF4D100527582 /* UIButton+countDown.m in Sources */,
+				9138206925C0EB5000F76EBD /* MissionTableViewCellEx.m in Sources */,
 				91C9ED5822BAA08500630C0C /* AlertView.m in Sources */,
 				916C447F22B0F5B400C6772A /* AMapVC.m in Sources */,
 				91E3BDDC22ABE7D700527582 /* Utils.m in Sources */,
 				91E3BDF722AF339D00527582 /* WebVC.m in Sources */,
 				91E3BDEC22AF06C800527582 /* TKViewController.m in Sources */,
+				9138207125C0F55500F76EBD /* DayViewEx.m in Sources */,
 				916C44C722B65F8000C6772A /* Income.m in Sources */,
 				91E3BDBF22A9541D00527582 /* LoginVC.m in Sources */,
 			);
@@ -982,6 +1010,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1041,6 +1070,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1075,17 +1105,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = MS33TNSTA6;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TourKingIOS/TKPrefixHeader.pch;
 				INFOPLIST_FILE = TourKingIOS/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.3;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tourking.driver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1100,18 +1130,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = MS33TNSTA6;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TourKingIOS/TKPrefixHeader.pch;
 				INFOPLIST_FILE = TourKingIOS/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.3;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tourking.driver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

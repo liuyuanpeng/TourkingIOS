@@ -34,7 +34,7 @@
         NSArray* result = [NSArray arrayWithArray:[[ret objectForKey:@"data"] objectForKey:@"data_list"]];
         weakSelf.orders = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
             NSString *scene = [evaluatedObject objectForKey:@"scene"];
-            return [scene compare:@"JIEJI"] == NSOrderedSame || [scene compare:@"SONGJI"] == NSOrderedSame || [scene compare:@"ORDER_SCENE"] == NSOrderedSame || [scene compare:@"JINGDIAN_PRIVATE"] == NSOrderedSame;
+            return [scene compare:@"JIEJI"] == NSOrderedSame || [scene compare:@"SONGJI"] == NSOrderedSame || [scene compare:@"ORDER_SCENE"] == NSOrderedSame || [scene compare:@"JINGDIAN_PRIVATE"] == NSOrderedSame || [scene compare:@"MEISHI_PRIVATE"] == NSOrderedSame;
         }]];
         weakSelf.charteredOrders = [result filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
             NSString *scene = [evaluatedObject objectForKey:@"scene"];

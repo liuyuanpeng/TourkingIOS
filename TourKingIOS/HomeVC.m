@@ -7,7 +7,7 @@
 //
 
 #import "HomeVC.h"
-#import "MissionTableViewCell.h"
+#import "MissionTableViewCellEx.h"
 #import <MJRefresh.h>
 #import "User.h"
 #import "AcceptedOrders.h"
@@ -90,10 +90,12 @@
     NSInteger rowIndex = indexPath.row;
     NSDictionary *rowData = [AcceptedOrders shareInstance].orders[rowIndex];
     NSString *scene = [rowData objectForKey:@"scene"];
-    if ([scene compare:@"DAY_PRIVATE"] == NSOrderedSame || [scene compare:@"ROAD_PRIVATE"] == NSOrderedSame) {
-        return 220.0;
+    if ([scene compare:@"DAY_PRIVATE"] == NSOrderedSame) {
+        return 280.0;
+    } else if ( [scene compare:@"ROAD_PRIVATE"] == NSOrderedSame) {
+        return 250.0;
     }
-    return 330.0;
+    return 360.0;
 }
 
 #pragma mark - UITableView Datasource Impletation
@@ -106,7 +108,7 @@
     NSInteger rowIndex = indexPath.row;
     NSDictionary *rowData = [AcceptedOrders shareInstance].orders[rowIndex];
     NSString *scene = [rowData objectForKey:@"scene"];
-    MissionTableViewCell *cell = [MissionTableViewCell cellWithTableView:tableView viewController:self chartered:[scene compare:@"DAY_PRIVATE"] == NSOrderedSame || [scene compare:@"ROAD_PRIVATE"] == NSOrderedSame];
+    MissionTableViewCellEx *cell = [MissionTableViewCellEx cellWithTableView:tableView viewController:self scene:scene];
     [cell setData:rowData];
     return cell;
 }

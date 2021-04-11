@@ -65,6 +65,7 @@
     [listenButton setTitleColor:[UIColor colorWithRed:0x2B/255.0 green:0xB3/255.0 blue:0x6B/255.0 alpha:1.0] forState:UIControlStateNormal];
     listenButton.layer.cornerRadius = 10.0;
     _homeVC.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:listenButton];
+    [listenButton setHidden:YES];
     
     
     UINavigationController *missionNav = [[UINavigationController alloc] initWithRootViewController:missionVC];

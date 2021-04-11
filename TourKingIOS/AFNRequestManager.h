@@ -11,6 +11,7 @@
 
 // server product
 #define BASE_URL @"https://apis.kingtrip.vip/v5"
+//#define BASE_URL @"http://tms.kingtrip.vip/v5"
 // image server
 #define IMG_URL @"https://apis.kingtrip.vip/v5"
 

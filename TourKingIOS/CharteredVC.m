@@ -79,7 +79,14 @@
 
 #pragma mark - UITableView Delegate Implementation
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 220.0;
+    NSInteger rowIndex = indexPath.row;
+    NSDictionary *rowData = [OnlineOrders shareInstance].charteredOrders[rowIndex];
+    NSString *scene = [rowData objectForKey:@"scene"];
+    if ([scene compare:@"DAY_PRIVATE"] == NSOrderedSame) {
+        return 250.0;
+    } else {
+        return 220.0;
+    }
 }
 
 #pragma mark - UITableView Datasource Impletation
@@ -89,9 +96,10 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MissionTableViewCell *cell = [MissionTableViewCell cellWithTableView:tableView viewController:self chartered: YES];
     NSInteger rowIndex = indexPath.row;
     NSDictionary *rowData = [OnlineOrders shareInstance].charteredOrders[rowIndex];
+    NSString *scene = [rowData objectForKey:@"scene"];
+    MissionTableViewCell *cell = [MissionTableViewCell cellWithTableView:tableView viewController:self scene: scene];
     [cell setData:rowData];
     return cell;
 }

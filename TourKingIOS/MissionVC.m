@@ -89,10 +89,10 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MissionTableViewCell *cell = [MissionTableViewCell cellWithTableView:tableView viewController:self chartered:NO];
     NSInteger rowIndex = indexPath.row;
     NSDictionary *rowData = [OnlineOrders shareInstance].orders[rowIndex];
-    [cell setData:rowData];
+    NSString *scene = [rowData objectForKey:@"scene"];
+    MissionTableViewCell *cell = [MissionTableViewCell cellWithTableView:tableView viewController:self scene:scene];    [cell setData:rowData];
     return cell;
 }
 
