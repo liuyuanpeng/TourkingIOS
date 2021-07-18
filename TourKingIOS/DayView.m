@@ -16,6 +16,7 @@
 #import "AlertView.h"
 #import <SRMModalViewController.h>
 #import "DetailVC.h"
+#import <Toast/UIView+Toast.h>
 
 @interface DayView ()
 {
@@ -239,6 +240,8 @@
         } okBlock:^{
             [AFNRequestManager requestAFURL:@"/travel/driver/done_order" httpMethod:METHOD_POST params:@{@"order_id":[self.data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
                 if (ret == nil) {
+                    [self makeToast:@"用户还未付款，不能结束该订单！" duration:2 position:CSToastPositionCenter];
+
                     return;
                 }
                 // 更新已接单列表

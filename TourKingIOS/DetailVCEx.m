@@ -13,6 +13,7 @@
 #import "AlertView.h"
 #import <SRMModalViewController.h>
 #import "User.h"
+#import <Toast/UIView+Toast.h>
 
 
 @interface DetailVCEx ()
@@ -124,6 +125,8 @@
         __weak __typeof(self)weakweakSelf = weakSelf;
         [AFNRequestManager requestAFURL:@"/travel/driver/done_order" httpMethod:METHOD_POST params:@{@"order_id": [NSString stringWithFormat:@"%@", [self.data objectForKey:@"id"]], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
             if (ret == nil) {
+                [self.view makeToast:@"用户还未付款，不能结束该订单！" duration:2 position:CSToastPositionCenter];
+
                 return;
             }
             [weakweakSelf dismissViewControllerAnimated:NO completion:nil];

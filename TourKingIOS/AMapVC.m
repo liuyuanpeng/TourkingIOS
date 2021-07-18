@@ -12,6 +12,7 @@
 #import "User.h"
 #import "AlertView.h"
 #import <SRMModalViewController.h>
+#import <Toast/UIView+Toast.h>
 #import "AcceptedOrders.h"
 
 @interface AMapVC ()<AMapNaviDriveManagerDelegate, AMapNaviDriveDataRepresentable, AMapNaviDriveViewDelegate>
@@ -44,6 +45,18 @@
     }
     return self;
 }
+
+- (void)onRefreshOrder:(id)sender {
+    [AFNRequestManager requestAFURL:@"/travel/order/get" httpMethod:METHOD_GET params:@{@"order_id":[self.data objectForKey:@"id"]} data:nil succeed:^(NSDictionary *ret) {
+        if (ret != nil) {
+            self.data = [ret objectForKey:@"data"];
+            [self refreshView];
+            return;
+        }
+        
+    } failure:nil];
+}
+
 - (void)onChangeOrder:(id)sender {
     // 申请改派
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"确定要申请改派该订单吗？" preferredStyle:UIAlertControllerStyleAlert];
@@ -93,15 +106,27 @@
         [changeButton setBackgroundColor:[UIColor whiteColor]];
         [changeButton setTitleColor:[UIColor colorWithRed:0x2B/255.0 green:0xB3/255.0 blue:0x6B/255.0 alpha:1.0] forState:UIControlStateNormal];
         changeButton.layer.cornerRadius = 10.0;
-        
+                
         _navigationBarTitle.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:changeButton];
         [self.bottomBtn setTitle:@"到达约定点" forState:UIControlStateNormal];
         self.endPoint = [AMapNaviPoint locationWithLatitude:[[self.data objectForKey:@"start_latitude"] doubleValue] longitude:[[self.data objectForKey:@"start_longitude"] doubleValue]];
     } else {
         // 服务中
         self.customLab.text = @"服务中";
+        
+        UIButton *refreshButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        refreshButton.frame = CGRectMake(0, 0, 80, 20);
+        [refreshButton addTarget:self action:@selector(onRefreshOrder:) forControlEvents:UIControlEventTouchUpInside];
+        [refreshButton setTitle:@"刷新" forState:UIControlStateNormal];
+        [refreshButton setBackgroundColor:[UIColor whiteColor]];
+        [refreshButton setTitleColor:[UIColor colorWithRed:0x2B/255.0 green:0xB3/255.0 blue:0x6B/255.0 alpha:1.0] forState:UIControlStateNormal];
+        refreshButton.layer.cornerRadius = 10.0;
+                
+        _navigationBarTitle.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:refreshButton];
+
+        
         [self.bottomBtn setTitle:@"结束行程" forState:UIControlStateNormal];
-        _navigationBarTitle.rightBarButtonItem = nil;
+        
         self.endPoint = [AMapNaviPoint locationWithLatitude:[[self.data objectForKey:@"target_latitude"] doubleValue] longitude:[[self.data objectForKey:@"target_longitude"] doubleValue]];
        
     }
@@ -254,6 +279,7 @@
     NSLog(@"onCalculateRouteSuccess");
     
     //显示路径或开启导航
+//    [[AMapNaviDriveManager sharedInstance] startEmulatorNavi];
     [[AMapNaviDriveManager sharedInstance] startGPSNavi];
 }
 
@@ -477,6 +503,8 @@
             __weak __typeof(self)weakweakSelf = weakSelf;
             [AFNRequestManager requestAFURL:@"/travel/driver/done_order" httpMethod:METHOD_POST params:@{@"order_id":[self.data objectForKey:@"id"], @"driver_user_id":[User shareInstance].id} data:nil succeed:^(NSDictionary *ret) {
                 if (ret == nil) {
+                    [self.view makeToast:@"用户还未付款，不能结束该订单！" duration:2 position:CSToastPositionCenter];
+
                     return;
                 }
                 [weakweakSelf dismissViewControllerAnimated:NO completion:nil];
